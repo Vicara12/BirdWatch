@@ -1,9 +1,10 @@
 #include <iostream>
 #include "pfd/pfd.h"
+#include "winhandler/windowhandler.h"
 
 int main ()
 {
-	PFD pfd;
-  std::cout << pfd.test() << std::endl;
+  WindowHandler w("BirdWatcher");
+  w.play();
   return 0;
 }

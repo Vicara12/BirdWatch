@@ -1,5 +1,6 @@
 
 OPTIONS := -O2 -Wall -Wno-sign-compare -Wno-unused-parameter
+LIBS 		:= -lGL -lSDL2 -lGLEW
 
 EXE_NAME = BirdWatch
 
@@ -30,7 +31,7 @@ replicate_dirs:
 #linking
 $(BIN_PATH)$(EXE_NAME): $(ALL_O)
 	@echo ' -> linking'
-	@g++ $(OPTIONS) -o $@ $(ALL_O)
+	@g++ $(OPTIONS) -o $@ $(ALL_O) $(LIBS)
 	@echo Finished!
 
 # generic build rule
