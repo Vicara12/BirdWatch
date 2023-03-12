@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <iostream>
+#include <vector>
+#include "drawable.h"
 
 
 class WindowHandler
@@ -12,6 +14,7 @@ class WindowHandler
 
     WindowHandler (std::string window_name);
     void play ();
+    void addDrawable (Drawable *drawable);
     void setRes (int width, int height);
 
   private:
@@ -25,6 +28,7 @@ class WindowHandler
     std::string wname;
     bool window_open;
     int width, height;
+    std::vector<Drawable*> window_objects;
     SDL_Window *window;
     SDL_GLContext gl_context;
 };

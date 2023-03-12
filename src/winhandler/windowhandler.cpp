@@ -40,6 +40,7 @@ void WindowHandler::initialSetup ()
   if (glewInit() != GLEW_OK)
     std::cout << "ERROR: could not initialize window\n";
   glClearColor(0,0,0,255);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   window_open = true;
 }
 
@@ -53,6 +54,13 @@ void WindowHandler::update ()
 void WindowHandler::drawItems ()
 {
   glClear(GL_COLOR_BUFFER_BIT);
+  for (Drawable *drawable : window_objects)
+    drawable->draw();
+}
+
+void WindowHandler::addDrawable (Drawable *drawable)
+{
+  window_objects.push_back(drawable);
 }
 
 void WindowHandler::handleEvents ()
@@ -72,5 +80,7 @@ void WindowHandler::handleEvents ()
 
 void WindowHandler::deleteDisplay ()
 {
-
+  SDL_GL_DeleteContext(gl_context);
+  SDL_DestroyWindow(window);
+  SDL_Quit();
 }

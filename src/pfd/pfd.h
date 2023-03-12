@@ -1,17 +1,20 @@
 #ifndef PFD_H_
 #define PFD_H_
 
-class PFD
+#include "winhandler/drawable.h"
+
+class PFD : public Drawable
 {
   public:
 
     PFD();
-
-    int test ();
+    bool init ();
+    void draw ();
 
   private:
-
-    int foo = 1;
+    unsigned shaders_program;
+    unsigned vao_square;
+    unsigned texture;
 };
 
 #endif
