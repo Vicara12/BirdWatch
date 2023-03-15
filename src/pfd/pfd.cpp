@@ -1,16 +1,22 @@
 #include "pfd.h"
 
-
-PFD::PFD () {}
+PFD::PFD ()
+{
+}
 
 bool PFD::init()
 {
+  Drawable::generateSquare(vao_square);
   if (not Drawable::loadProgram("./res/shaders/pfd", shaders_program))
       //not Drawable::loadTexture("./res/textures/pfd/awesomeface.png", texture, true, false))
     return false;
-  Drawable::generateSquare(vao_square);
   //glUniform1i(glGetUniformLocation(shaders_program, "texture0"), 0);
   return true;
+}
+
+std::string PFD::name ()
+{
+  return "Primary Flight Display";
 }
 
 void PFD::draw()

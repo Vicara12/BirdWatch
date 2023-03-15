@@ -10,6 +10,7 @@ class PFD : public Drawable
     PFD();
     bool init ();
     void draw ();
+    std::string name ();
 
   private:
     unsigned shaders_program;

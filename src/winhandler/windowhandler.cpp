@@ -1,4 +1,5 @@
 #include "windowhandler.h"
+#include <iostream>
 
 
 WindowHandler::WindowHandler (std::string window_name)
@@ -39,9 +40,13 @@ void WindowHandler::initialSetup ()
   gl_context = SDL_GL_CreateContext(window);
   if (glewInit() != GLEW_OK)
     std::cout << "ERROR: could not initialize window\n";
-  glClearColor(0,0,0,255);
+  glClearColor(0.1f,0.1f,0.1f,1.f);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   window_open = true;
+
+  for (Drawable *drawable : window_objects)
+    if (not drawable->init())
+      std::cout << "Could not init the panel " << drawable->name() << std::endl;
 }
 
 void WindowHandler::update ()

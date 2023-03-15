@@ -9,7 +9,9 @@ class Drawable
   public:
     Drawable ();
 
-    virtual void draw() = 0;
+    virtual void draw () = 0;
+    virtual bool init () = 0;
+    virtual std::string name () = 0;
 
     static bool loadShader (GLenum shader_type, const std::string &path, unsigned &shader);
     static bool loadProgram (std::string path, unsigned &program);
