@@ -4,7 +4,7 @@
 
 
 Rectangle::Rectangle () :
-  texture_path("./res/textures/pfd/awesomeface.png"),
+  texture_path("./res/textures/awesomeface.png"),
   shader_path("./res/shaders/pfd"),
   translation(glm::vec3(0.f)),
   scale(glm::vec3(1.f)),

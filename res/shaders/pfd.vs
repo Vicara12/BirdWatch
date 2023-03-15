@@ -9,7 +9,7 @@ uniform mat4 TG;
 
 void main()
 {
-    gl_Position = TG * vec4(aPos, 1.0);
+    gl_Position = TG * vec4(aPos.x/2, aPos.yz, 1.0);
     //gl_Position = TG * vec4(aPos, 1.0);
     textureCoord = tCord;
 }
