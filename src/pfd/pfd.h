@@ -13,8 +13,6 @@ class PFD : public Drawable
     std::string name ();
 
   private:
-    unsigned shaders_program;
-    unsigned vao_square;
     unsigned texture;
 };
 

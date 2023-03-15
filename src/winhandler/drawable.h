@@ -9,16 +9,18 @@ class Drawable
   public:
     Drawable ();
 
-    virtual void draw () = 0;
+    virtual void draw ();
     virtual bool init () = 0;
     virtual std::string name () = 0;
 
+  protected:
     static bool loadShader (GLenum shader_type, const std::string &path, unsigned &shader);
     static bool loadProgram (std::string path, unsigned &program);
     static bool loadTexture (std::string path, unsigned &texture, bool has_alpha, bool flip);
-    static void generateSquare (unsigned &VAO);
+    static void generateSquare (unsigned &VAO, unsigned &EBO);
 
-  private:
+    unsigned VAO, EBO;
+    unsigned shader_program;
 };
 
 #endif
