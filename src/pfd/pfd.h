@@ -1,19 +1,16 @@
 #ifndef PFD_H_
 #define PFD_H_
 
-#include "winhandler/drawable.h"
+#include "winhandler/rectangle.h"
 
-class PFD : public Drawable
+class PFD : public Rectangle
 {
   public:
 
     PFD();
-    bool init ();
-    void draw ();
     std::string name ();
 
   private:
-    unsigned texture;
 };
 
 #endif
