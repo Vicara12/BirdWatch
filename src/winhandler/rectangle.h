@@ -13,6 +13,7 @@ class Rectangle : public Drawable
     virtual void draw ();
     virtual bool init ();
     virtual std::string name ();
+    void setName (std::string name);
     virtual void setTranslation (glm::vec3 translation);
     virtual void setScale (glm::vec3 scale);
     virtual void setRotation (float angle);
@@ -28,6 +29,7 @@ class Rectangle : public Drawable
     glm::vec3 translation;
     glm::vec3 scale;
     float angle;
+    std::string rect_name;
 };
 
 #endif

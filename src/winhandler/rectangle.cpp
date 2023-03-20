@@ -9,7 +9,8 @@ Rectangle::Rectangle () :
   shader_path("./res/shaders/pfd"),
   translation(glm::vec3(0.f)),
   scale(glm::vec3(1.f)),
-  angle(0.f)
+  angle(0.f),
+  rect_name("Rectangle")
 {
 }
 
@@ -52,7 +53,12 @@ bool Rectangle::init ()
 
 std::string Rectangle::name ()
 {
-  return "rectangle";
+  return rect_name;
+}
+
+void Rectangle::setName (std::string name)
+{
+  this->rect_name = name;
 }
 
 

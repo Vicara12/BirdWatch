@@ -3,6 +3,8 @@
 
 #include "winhandler/drawable.h"
 #include "winhandler/rectangle.h"
+#include "attitude.h"
+#include <glm/ext/vector_float3.hpp>
 
 class PFD : public Drawable
 {
@@ -12,10 +14,14 @@ class PFD : public Drawable
     void draw ();
     bool init ();
     std::string name ();
+    void setTranslation (glm::vec3 translation);
+    void setScale (glm::vec3 scale);
+    void setRotation (float angle);
 
   private:
 
-    Rectangle a,b;
+    AttitudeInd attitude_ind;
+    Rectangle background;
 };
 
 #endif

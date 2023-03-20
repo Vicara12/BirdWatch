@@ -93,7 +93,7 @@ bool Drawable::loadTexture (std::string path, unsigned &texture, bool has_alpha,
   int width, height, nr_channels;
   stbi_set_flip_vertically_on_load(flip);
   unsigned char *image_data = stbi_load(path.c_str(), &width,
-  &height, &nr_channels, 0);
+                                        &height, &nr_channels, 0);
 
   if (image_data) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
