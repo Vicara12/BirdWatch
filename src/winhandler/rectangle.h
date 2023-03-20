@@ -8,7 +8,7 @@ class Rectangle : public Drawable
 {
   public:
     Rectangle();
-    void changeTexture (std::string texture_path);
+    void changeTexture (std::string texture_path, bool has_alpha = true, bool flip_texture = true);
     void changeShaders (std::string shader_path);
     virtual void draw ();
     virtual bool init ();
@@ -21,6 +21,7 @@ class Rectangle : public Drawable
     void updateTG ();
 
     unsigned texture;
+    bool has_alpha, flip_texture;
     unsigned TGLoc;
     std::string texture_path;
     std::string shader_path;

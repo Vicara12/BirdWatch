@@ -4,7 +4,8 @@
 
 
 Rectangle::Rectangle () :
-  texture_path("./res/textures/awesomeface.png"),
+  has_alpha(true), flip_texture(false),
+  texture_path("./res/textures/default.png"),
   shader_path("./res/shaders/pfd"),
   translation(glm::vec3(0.f)),
   scale(glm::vec3(1.f)),
@@ -13,9 +14,11 @@ Rectangle::Rectangle () :
 }
 
 
-void Rectangle::changeTexture (std::string texture_path)
+void Rectangle::changeTexture (std::string texture_path, bool has_alpha, bool flip_texture)
 {
   this->texture_path = texture_path;
+  this->has_alpha = has_alpha;
+  this->flip_texture = flip_texture;
 }
 
 
@@ -38,7 +41,7 @@ bool Rectangle::init ()
 {
   Drawable::generateSquare(VAO, EBO);
   if (not Drawable::loadProgram(shader_path, shader_program) or
-      (not Drawable::loadTexture(texture_path, texture, true, false)))
+      (not Drawable::loadTexture(texture_path, texture, has_alpha, flip_texture)))
     return false;
   glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
   TGLoc = glGetUniformLocation(shader_program, "TG");
