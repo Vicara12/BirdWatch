@@ -59,6 +59,7 @@ void Rectangle::updateTG ()
   TG = glm::translate(TG, translation);
   TG = glm::rotate(TG, angle, glm::vec3(0.f, 0.f, 1.f));
   TG = glm::scale(TG, scale);
+  glUseProgram(shader_program);
   glUniformMatrix4fv(TGLoc, 1, GL_FALSE, &TG[0][0]);
 }
 
