@@ -15,9 +15,15 @@ class AttitudeInd : public Drawable
     void setTranslation (glm::vec3 translation);
     void setScale (glm::vec3 scale);
     void setRotation (float angle);
+    void setPitchRoll (float pitch, float roll);
 
   private:
-    Rectangle background;
+    void loadTextureTransformMat ();
+
+    Rectangle attitude_ind;
+    float pitch, roll;
+    unsigned texTransLoc;
+    unsigned border, statics;
 };
 
 #endif

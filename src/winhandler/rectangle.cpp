@@ -4,22 +4,24 @@
 
 
 Rectangle::Rectangle () :
-  has_alpha(true), flip_texture(false),
+  has_alpha(true),
   texture_path("./res/textures/default.png"),
   shader_path("./res/shaders/pfd"),
   translation(glm::vec3(0.f)),
   scale(glm::vec3(1.f)),
   angle(0.f),
-  rect_name("Rectangle")
+  rect_name("Rectangle"),
+  texture_border_mode(GL_REPEAT)
 {
 }
 
 
-void Rectangle::changeTexture (std::string texture_path, bool has_alpha, bool flip_texture)
+void Rectangle::changeTexture (std::string texture_path, bool has_alpha,
+                               unsigned border_mode)
 {
   this->texture_path = texture_path;
   this->has_alpha = has_alpha;
-  this->flip_texture = flip_texture;
+  this->texture_border_mode = border_mode;
 }
 
 
@@ -42,11 +44,11 @@ bool Rectangle::init ()
 {
   Drawable::generateSquare(VAO, EBO);
   if (not Drawable::loadProgram(shader_path, shader_program) or
-      (not Drawable::loadTexture(texture_path, texture, has_alpha, flip_texture)))
+      (not Drawable::loadTexture(texture_path, texture, has_alpha,
+                                 texture_border_mode)))
     return false;
   glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
   TGLoc = glGetUniformLocation(shader_program, "TG");
-  updateTG();
   return true;
 }
 
@@ -88,4 +90,10 @@ void Rectangle::setScale (glm::vec3 scale)
 void Rectangle::setRotation (float angle)
 {
   this->angle = angle;
+}
+
+
+unsigned Rectangle::getShaderProgram ()
+{
+  return shader_program;
 }

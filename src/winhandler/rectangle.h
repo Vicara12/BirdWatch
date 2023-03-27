@@ -8,8 +8,10 @@ class Rectangle : public Drawable
 {
   public:
     Rectangle();
-    void changeTexture (std::string texture_path, bool has_alpha = true, bool flip_texture = true);
+    void changeTexture (std::string texture_path, bool has_alpha = true,
+                        unsigned border_mode = GL_REPEAT);
     void changeShaders (std::string shader_path);
+    unsigned getShaderProgram ();
     virtual void draw ();
     virtual bool init ();
     virtual std::string name ();
@@ -22,7 +24,7 @@ class Rectangle : public Drawable
     void updateTG ();
 
     unsigned texture;
-    bool has_alpha, flip_texture;
+    bool has_alpha;
     unsigned TGLoc;
     std::string texture_path;
     std::string shader_path;
@@ -30,6 +32,7 @@ class Rectangle : public Drawable
     glm::vec3 scale;
     float angle;
     std::string rect_name;
+    unsigned texture_border_mode;
 };
 
 #endif

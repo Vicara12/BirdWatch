@@ -16,7 +16,8 @@ class Drawable
   protected:
     static bool loadShader (GLenum shader_type, const std::string &path, unsigned &shader);
     static bool loadProgram (std::string path, unsigned &program);
-    static bool loadTexture (std::string path, unsigned &texture, bool has_alpha, bool flip);
+    static bool loadTexture (std::string path, unsigned &texture, bool has_alpha,
+                             unsigned border_mode);
     static void generateSquare (unsigned &VAO, unsigned &EBO);
 
     unsigned VAO, EBO;

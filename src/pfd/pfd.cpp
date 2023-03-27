@@ -11,7 +11,7 @@ PFD::PFD ()
 
 void PFD::draw ()
 {
-  background.draw();
+  //background.draw();
   attitude_ind.draw();
 }
 
@@ -22,10 +22,12 @@ bool PFD::init ()
     std::cout << "Could not init " << attitude_ind.name() << "\n";
     all_ok = false;
   }
+  /*
   if (not background.init()) {
     std::cout << "Could not init " << background.name() << "\n";
     all_ok = false;
   }
+  */
   return all_ok;
 }
 
@@ -45,9 +47,9 @@ void PFD::setTranslation (glm::vec3 translation)
 
 void PFD::setScale (glm::vec3 scale)
 {
-  attitude_ind.setScale(glm::vec3(scale[0]*2,
-                                  scale[1]*2,
-                                  scale[2]*2));
+  attitude_ind.setScale(glm::vec3(scale[0]*1.5,
+                                  scale[1]*1.5,
+                                  scale[2]*1.5));
   background.setScale(glm::vec3(scale[0]*2,
                                 scale[1]*2,
                                 scale[2]*2));
