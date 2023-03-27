@@ -1,4 +1,5 @@
 #include "attitude.h"
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <string>
 
@@ -82,13 +83,14 @@ void AttitudeInd::setPitchRoll (float pitch, float roll)
 
 void AttitudeInd::loadTextureTransformMat ()
 {
-  pitch = 10;
+  pitch = 5;
   roll = 00;
+  float correction = pitch*0.49/90;
   glm::mat4 TG(1.f);
-  TG = glm::translate(TG, glm::vec3(0.5f, 0.5f, 0.f));
+  TG = glm::translate(TG, glm::vec3(0.5f, 0.5f+correction, 0.f));
   TG = glm::scale(TG, glm::vec3(1.f, 3.f/10.f, 1.f));
   TG = glm::rotate(TG, float(roll*M_PI/180.f), glm::vec3(0.f, 0.f, 1.f));
-  TG = glm::translate(TG, glm::vec3(-0.5f, -0.5f+pitch*1.65/90, 0.f));
+  TG = glm::translate(TG, glm::vec3(-0.5f, -0.5f, 0.f));
   glUseProgram(attitude_ind.getShaderProgram());
   glUniformMatrix4fv(texTransLoc, 1, GL_FALSE, &TG[0][0]);
 }
