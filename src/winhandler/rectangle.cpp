@@ -9,6 +9,7 @@ Rectangle::Rectangle () :
   shader_path("./res/shaders/pfd"),
   translation(glm::vec3(0.f)),
   scale(glm::vec3(1.f)),
+  preTG(glm::mat4(1.0)),
   angle(0.f),
   rect_name("Rectangle"),
   texture_border_mode(GL_REPEAT)
@@ -36,6 +37,8 @@ void Rectangle::draw ()
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texture);
   updateTG();
+  if (preTGLoc != -1)
+    glUniformMatrix4fv(preTGLoc, 1, GL_FALSE, &preTG[0][0]);
   Drawable::draw();
 }
 
@@ -49,6 +52,7 @@ bool Rectangle::init ()
     return false;
   glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
   TGLoc = glGetUniformLocation(shader_program, "TG");
+  preTGLoc = glGetUniformLocation(shader_program, "PreTG");
   return true;
 }
 
@@ -96,4 +100,10 @@ void Rectangle::setRotation (float angle)
 unsigned Rectangle::getShaderProgram ()
 {
   return shader_program;
+}
+
+
+void Rectangle::setPreTG (glm::mat4 PreTG)
+{
+  this->preTG = glm::mat4(PreTG);
 }

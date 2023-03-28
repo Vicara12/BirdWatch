@@ -11,7 +11,7 @@ PFD::PFD ()
 
 void PFD::draw ()
 {
-  //background.draw();
+  background.draw();
   attitude_ind.draw();
 }
 
@@ -22,12 +22,10 @@ bool PFD::init ()
     std::cout << "Could not init " << attitude_ind.name() << "\n";
     all_ok = false;
   }
-  /*
   if (not background.init()) {
     std::cout << "Could not init " << background.name() << "\n";
     all_ok = false;
   }
-  */
   return all_ok;
 }
 

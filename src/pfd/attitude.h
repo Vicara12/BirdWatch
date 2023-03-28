@@ -19,8 +19,9 @@ class AttitudeInd : public Drawable
 
   private:
     void loadTextureTransformMat ();
+    void angleIndicatorLoadPreTG();
 
-    Rectangle attitude_ind;
+    Rectangle attitude_ind, angle_ind;
     float pitch, roll;
     unsigned texTransLoc;
     unsigned border, statics;

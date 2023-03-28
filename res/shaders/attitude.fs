@@ -18,7 +18,20 @@ void main ()
     vec4 statics_color = texture(statics, texCord);
     vec4 realTexCoord = texTransform * vec4(texCord.x, texCord.y, 0, 1);
     vec4 bgn_color = texture(texture0, realTexCoord.xy);
-    vec4 mixed_color = mix(bgn_color, statics_color, statics_color.w);
+    vec4 mixed_color;
+    if (statics_color.w < 0.5) {
+      // in the upper part of the attitude indicator there is
+      // a semi-circle that does not have numbers, which displays
+      // a ttriangle with the angle, this makes the numberless
+      // strip. If the point is north of the non number display
+      // area, take the side color (blue, brown or white)
+      if (texCord.y > 0.5 && length(texCord-vec2(0.5, 0.5-0.17)) > 0.53)
+        mixed_color = texture(texture0, vec2(0,realTexCoord.y));
+      else
+        mixed_color = bgn_color;
+    } else {
+      mixed_color = statics_color;
+    }
     mixed_color.a = (1-border_color.a);
     FragColor = mixed_color;
   } else {

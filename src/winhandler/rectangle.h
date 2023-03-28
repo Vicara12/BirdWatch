@@ -19,17 +19,21 @@ class Rectangle : public Drawable
     virtual void setTranslation (glm::vec3 translation);
     virtual void setScale (glm::vec3 scale);
     virtual void setRotation (float angle);
+    // this is used to set a transformation previous
+    // to the location of each element
+    virtual void setPreTG (glm::mat4 PreTG);
 
   protected:
     void updateTG ();
 
     unsigned texture;
     bool has_alpha;
-    unsigned TGLoc;
+    int TGLoc, preTGLoc;
     std::string texture_path;
     std::string shader_path;
     glm::vec3 translation;
     glm::vec3 scale;
+    glm::mat4 preTG;
     float angle;
     std::string rect_name;
     unsigned texture_border_mode;
