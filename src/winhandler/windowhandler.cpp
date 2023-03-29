@@ -44,6 +44,9 @@ void WindowHandler::initialSetup ()
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   window_open = true;
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
   for (Drawable *drawable : window_objects)
     if (not drawable->init())
       std::cout << "Could not init the panel " << drawable->name() << std::endl;
