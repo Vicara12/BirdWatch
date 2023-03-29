@@ -25,7 +25,7 @@ void main ()
       // a ttriangle with the angle, this makes the numberless
       // strip. If the point is north of the non number display
       // area, take the side color (blue, brown or white)
-      if (texCord.y > 0.5 && length(texCord-vec2(0.5, 0.5-0.17)) > 0.53)
+      if (texCord.y > 0.7 && length(texCord-vec2(0.5, 0.5)) > 0.40)
         mixed_color = texture(texture0, vec2(0,realTexCoord.y));
       else
         mixed_color = bgn_color;
