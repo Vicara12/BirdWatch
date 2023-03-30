@@ -49,7 +49,7 @@ void WindowHandler::initialSetup ()
 
   for (Drawable *drawable : window_objects)
     if (not drawable->init())
-      std::cout << "Could not init the panel " << drawable->name() << std::endl;
+      std::cout << "ERROR: could not init the panel " << drawable->name() << std::endl;
 }
 
 void WindowHandler::update ()

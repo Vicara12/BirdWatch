@@ -95,6 +95,7 @@ void AttitudeInd::setPitchRoll (float pitch, float roll)
 
 void AttitudeInd::loadTextureTransformMat ()
 {
+  //pitch =  ((clock()/3000)%180 -90);
   pitch = 10;
   roll = ((clock()/5000)%120 -60);
   //roll = 40;

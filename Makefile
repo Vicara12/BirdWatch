@@ -1,7 +1,6 @@
 
 OPTIONS := -O2 -Wall -Wno-sign-compare -Wno-unused-parameter
-LIBS 		:= -lGL -lSDL2 -lGLEW
-
+LIBS 		:= -lGL -lSDL2 -lGLEW -lfreetype
 EXE_NAME = BirdWatch
 
 BIN_PATH     = bin/
@@ -11,6 +10,9 @@ INCLUDE_PATH = include/
 SRC_PATH     = src/
 
 ################################################################################
+
+INCLUDE_DIRS = -I$(INCLUDE_PATH) -I$(SRC_PATH) $(shell pkg-config --cflags freetype2)
+
 
 # get project files
 ALL_CPP := $(shell find $(SRC_PATH) $(INCLUDE_PATH) -type f -name "*.cpp")
@@ -37,7 +39,7 @@ $(BIN_PATH)$(EXE_NAME): $(ALL_O)
 # generic build rule
 $(BUILD_PATH)%.o: $(SRC_PATH)%.cpp
 	@echo ' -> building:' $<
-	@g++ $(OPTIONS) -c $< -o $@ -I$(INCLUDE_PATH) -I$(SRC_PATH) -MMD -MF  $(subst $(BUILD_PATH),$(DEP_PATH),$(@:.o=.d))
+	@g++ $(OPTIONS) -c $< -o $@ $(INCLUDE_DIRS) -MMD -MF  $(subst $(BUILD_PATH),$(DEP_PATH),$(@:.o=.d))
 
 
 .PHONY: clean count init
