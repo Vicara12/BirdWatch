@@ -4,8 +4,9 @@
 #include "pfd/pfd.h"
 #include "winhandler/windowhandler.h"
 #include "winhandler/textrender.h"
+#include "datahandler/serial.h"
 
-int main ()
+void test1 ()
 {
   PFD pfd_test;
   pfd_test.setTranslation(glm::vec3(0.5f, 0.f, 0.f));
@@ -17,5 +18,17 @@ int main ()
   //w.addDrawable(&pfd_test);
   w.addDrawable(text_renderer);
   w.play();
+}
+
+void testSerial ()
+{
+  //SerialReader serial;
+  for (auto found : SerialReader::getAvailablePorts("S"))
+    std::cout << "Found -> " << found << std::endl;
+}
+
+int main ()
+{
+  testSerial();
   return 0;
 }

@@ -1,5 +1,5 @@
 
-OPTIONS := -O2 -Wall -Wno-sign-compare -Wno-unused-parameter
+OPTIONS := -std=c++17 -O2 -Wall -Wno-sign-compare -Wno-unused-parameter
 LIBS 		:= -lGL -lSDL2 -lGLEW -lfreetype
 EXE_NAME = BirdWatch
 
