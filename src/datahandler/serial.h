@@ -23,6 +23,7 @@ class SerialReader
     void writePort (std::string message);
     // read data from the port, returns number of read bytes or -1 if error
     int readPort (char *buffer, unsigned buff_size);
+    std::string readPort ();
     int getNAvailableBytes () const;
     void closePort ();
     // change c_cflags attribute, options are

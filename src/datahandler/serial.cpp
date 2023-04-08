@@ -7,6 +7,7 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 #include <filesystem>
+#include <algorithm>
 
 
 void SerialReader::printError (std::string location)
@@ -23,6 +24,7 @@ SerialReader::SerialReader () :
 
 bool SerialReader::init (std::string port_name, int baud_rate)
 {
+  port_name = "/dev/tty" + port_name;
   serial_port = open(port_name.c_str(), O_RDWR);
   initialized = false;
 
@@ -95,7 +97,27 @@ int SerialReader::readPort (char *buffer, unsigned buff_size)
     printf("SERIAL ERROR: trying to read from an uninitialized serial port\n");
     return -1;
   } else {
-    return read(serial_port, &buffer, buff_size);
+    int x = read(serial_port, buffer, buff_size-1);
+    buffer[x] = 0; // end of line
+    return x;
+  }
+}
+
+
+std::string SerialReader::readPort ()
+{
+  if (not initialized) {
+    printf("SERIAL ERROR: trying to write to an uninitialized serial port\n");
+    return "";
+  } else {
+    char buffer[512];
+    int nbytes = 0;
+    std::string str_data = "";
+    while ((nbytes = read(serial_port, &buffer, sizeof(buffer)-1)) > 0) {
+      buffer[nbytes] = 0;
+      str_data += std::string(buffer);
+    }
+  return str_data;
   }
 }
 

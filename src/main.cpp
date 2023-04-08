@@ -6,6 +6,9 @@
 #include "winhandler/textrender.h"
 #include "datahandler/serial.h"
 
+#include <unistd.h>
+#include <stdlib.h>
+
 void test1 ()
 {
   PFD pfd_test;
@@ -22,9 +25,18 @@ void test1 ()
 
 void testSerial ()
 {
-  //SerialReader serial;
-  for (auto found : SerialReader::getAvailablePorts("S"))
-    std::cout << "Found -> " << found << std::endl;
+  SerialReader serial;
+  std::vector<std::string> ports = SerialReader::getAvailablePorts("USB");
+  if (ports.size() == 0)
+    std::cout << "ERROR: no suitable serial port found\n";
+  else if (ports.size() > 1)
+    std::cout << "ERROR: more than one suitable serial port found\n";
+  else {
+    if (not serial.init(ports[0], B115200) or not serial.setLocalModes(ICANON, true))
+      return;
+    while (1)
+      std::cout << serial.readPort();
+  }
 }
 
 int main ()
