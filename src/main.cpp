@@ -32,10 +32,15 @@ void testSerial ()
   else if (ports.size() > 1)
     std::cout << "ERROR: more than one suitable serial port found\n";
   else {
-    if (not serial.init(ports[0], B115200) or not serial.setLocalModes(ICANON, true))
+    if (not serial.init(ports[0], B9600))
       return;
-    while (1)
+    while (1) {
+      std::string input;
+      while (serial.getNAvailableBytes() == 0) sleep(1);
       std::cout << serial.readPort();
+      std::cin >> input;
+      serial.writePort(input);
+    }
   }
 }
 
