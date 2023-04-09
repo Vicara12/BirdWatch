@@ -68,7 +68,6 @@ bool SerialReader::init (std::string port_name, int baud_rate)
 }
 
 
-// returns a vector with all available port names (USB0, ACM0, PS0...)
 std::vector<std::string> SerialReader::getAvailablePorts (std::string filter)
 {
   std::vector<std::string> found;
