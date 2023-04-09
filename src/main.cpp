@@ -4,7 +4,7 @@
 #include "pfd/pfd.h"
 #include "winhandler/windowhandler.h"
 #include "winhandler/textrender.h"
-#include "datahandler/serial.h"
+#include "datahandler/serialsource.h"
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -25,21 +25,15 @@ void test1 ()
 
 void testSerial ()
 {
-  SerialReader serial;
-  std::vector<std::string> ports = SerialReader::getAvailablePorts("USB");
-  if (ports.size() == 0)
-    std::cout << "ERROR: no suitable serial port found\n";
-  else if (ports.size() > 1)
-    std::cout << "ERROR: more than one suitable serial port found\n";
-  else {
-    if (not serial.init(ports[0], B9600))
-      return;
-    while (1) {
-      std::string input;
-      while (serial.getNAvailableBytes() == 0) sleep(1);
-      std::cout << serial.readPort();
-      std::cin >> input;
-      serial.writePort(input);
+  SerialSource ss("USB0", B9600);
+  ss.setDataFormat(DF_BINARY);
+  ss.setExpectedLineSize(12);
+  while(1) {
+    if (ss.newDataAvailable()) {
+      std::vector<float> new_data = ss.getLatestData();
+      for (auto item : new_data)
+        std::cout << item << " ";
+      std::cout << "\n";
     }
   }
 }
