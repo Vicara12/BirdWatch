@@ -1,4 +1,5 @@
 #include "serialsource.h"
+#include <sstream>
 
 
 SerialSource::SerialSource (std::string port, int baud, int line_buffer_size) :
@@ -37,7 +38,10 @@ std::vector<float> SerialSource::getLatestData ()
     for (int i = 0; i < last_line_size/4; i++)
       data.push_back(read_data_in_float[i]);
   } else {
-    printf("-> %s\n", last_full_line);
+    std::stringstream ss(last_full_line);
+    std::string element;
+    while (std::getline(ss, element, separator))
+      data.push_back(std::stof(element));
   }
   data_available = false;
   return data;
@@ -50,17 +54,18 @@ void SerialSource::processNewData ()
     char buffer[512];
     int buffer_len = serial.readPort(buffer, sizeof(buffer));
     for (int i = 0; i < buffer_len; i++) {
-      if (buffer[i] == '\n') {
-        if (line_size_fixed and cline_pos != expected_line_size)
+      if (buffer[i] == '\n' and cline_pos > 0 and current_line[cline_pos-1] == '\r') {
+        // expected_line_size+1 because carriage return is not taken into account
+        if (line_size_fixed and cline_pos != expected_line_size+1)
           invalid_line = true;
         if (invalid_line)
           invalid_line = false;
         else
           data_available = true;
-        current_line[cline_pos] = 0;
-        last_line_size = cline_pos;
+        current_line[cline_pos-1] = 0; // -1 to overwrite carriage return
+        last_line_size = cline_pos-1;
         swapBuffers();
-      } else if (buffer[i] != '\r') {
+      } else {
         current_line[cline_pos] = buffer[i];
         cline_pos++;
       }

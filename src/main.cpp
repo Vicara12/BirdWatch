@@ -26,8 +26,9 @@ void test1 ()
 void testSerial ()
 {
   SerialSource ss("USB0", B9600);
-  ss.setDataFormat(DF_BINARY);
-  ss.setExpectedLineSize(12);
+  //ss.setDataFormat(DF_BINARY);
+  //ss.setExpectedLineSize(12);
+  ss.setDataFormat(DF_ASCII);
   while(1) {
     if (ss.newDataAvailable()) {
       std::vector<float> new_data = ss.getLatestData();
