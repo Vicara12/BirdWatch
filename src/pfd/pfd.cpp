@@ -59,3 +59,9 @@ void PFD::setRotation (float angle)
   attitude_ind.setRotation(angle);
   background.setRotation(angle);
 }
+
+
+void PFD::setYPR (float yaw, float pitch, float roll)
+{
+  attitude_ind.setPitchRoll(pitch, roll);
+}

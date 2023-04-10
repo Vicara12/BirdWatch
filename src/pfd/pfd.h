@@ -17,6 +17,7 @@ class PFD : public Drawable
     void setTranslation (glm::vec3 translation);
     void setScale (glm::vec3 scale);
     void setRotation (float angle);
+    void setYPR (float yaw, float pitch, float roll);
 
   private:
 

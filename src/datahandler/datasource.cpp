@@ -14,10 +14,8 @@ void DataSource::setDataFormat (DataFormat data_format)
 }
 
 
-void DataSource::setExpectedLineSize(int expected_line_size)
+void DataSource::setFieldsPerLine (int expected_line_size)
 {
-  if (data_format == DF_ASCII)
-    printf("WARNING: setting expected line size with ASCII data is unsuported\n");
   this->expected_line_size = expected_line_size;
   line_size_fixed = true;
 }

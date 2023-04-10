@@ -1,5 +1,6 @@
 #include "serialsource.h"
 #include <sstream>
+#include <iostream>
 
 
 SerialSource::SerialSource (std::string port, int baud, int line_buffer_size) :
@@ -26,6 +27,12 @@ bool SerialSource::newDataAvailable ()
 }
 
 
+bool SerialSource::serialInitiated()
+{
+  return serial_init_ok;
+}
+
+
 std::vector<float> SerialSource::getLatestData ()
 {
   std::vector<float> data;
@@ -41,7 +48,13 @@ std::vector<float> SerialSource::getLatestData ()
     std::stringstream ss(last_full_line);
     std::string element;
     while (std::getline(ss, element, separator))
-      data.push_back(std::stof(element));
+      try {
+        data.push_back(std::stof(element));
+      } catch (std::exception *e) {
+        data.push_back(0);
+        std::cout << "WARNING: non numerical field found in line:" << std::endl;
+        std::cout << "    " << std::string(last_full_line) << std::endl;
+      }
   }
   data_available = false;
   return data;

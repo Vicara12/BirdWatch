@@ -16,6 +16,12 @@ void WindowHandler::play()
   deleteDisplay();
 }
 
+
+bool WindowHandler::windowOpen () const
+{
+  return window_open;
+}
+
 void WindowHandler::setRes (int width, int height)
 {
   this->width = width;

@@ -95,10 +95,6 @@ void AttitudeInd::setPitchRoll (float pitch, float roll)
 
 void AttitudeInd::loadTextureTransformMat ()
 {
-  //pitch =  ((clock()/3000)%180 -90);
-  pitch = 10;
-  roll = ((clock()/5000)%120 -60);
-  //roll = 40;
   float correction = pitch*0.49/90;
   glm::mat4 TG(1.f);
   TG = glm::translate(TG, glm::vec3(0.5f, 0.5f+correction, 0.f));
