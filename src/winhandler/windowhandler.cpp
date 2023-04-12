@@ -3,7 +3,7 @@
 
 
 WindowHandler::WindowHandler (std::string window_name)
-  : wname(window_name), width(1200), height(600)
+  : wname(window_name), width(1800), height(900)
 {
 
 }

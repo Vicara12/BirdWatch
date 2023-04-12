@@ -25,6 +25,7 @@ void DataHandler::updateData ()
 {
   if (data_source->newDataAvailable()) {
     std::vector<float> new_data = data_source->getLatestData();
+    std::cout << std::endl;
     int ypr_pos = data_format["YPR"];
     if (ypr_pos != -1)
       pfd->setYPR(new_data[ypr_pos], new_data[ypr_pos+1], new_data[ypr_pos+2]);

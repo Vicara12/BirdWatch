@@ -75,6 +75,8 @@ void SerialSource::processNewData ()
           invalid_line = false;
         else
           data_available = true;
+        if (data_available)
+          std::cout << "yeah\n";
         current_line[cline_pos-1] = 0; // -1 to overwrite carriage return
         last_line_size = cline_pos-1;
         swapBuffers();
