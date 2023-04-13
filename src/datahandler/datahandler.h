@@ -20,12 +20,14 @@ class DataHandler
     void setDataFields (const std::vector<std::string> &data_fields);
     void setPFD (PFD *pfd);
     void updateData ();
+    void printDataInTerminal (bool print);
 
   private:
     PFD *pfd;
     DataSource *data_source;
     std::map<std::string, int> data_format;
     bool pfd_provided;
+    bool print_in_term;
 };
 
 #endif
