@@ -50,6 +50,7 @@ bool Rectangle::init ()
       (not Drawable::loadTexture(texture_path, texture, has_alpha,
                                  texture_border_mode)))
     return false;
+  glUseProgram(shader_program);
   glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
   TGLoc = glGetUniformLocation(shader_program, "TG");
   preTGLoc = glGetUniformLocation(shader_program, "PreTG");
