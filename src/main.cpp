@@ -12,7 +12,6 @@
 void test1 ()
 {
   PFD pfd_test;
-  /*
   SerialSource serial_source("USB0", B9600);
   if (not serial_source.serialInitiated())
     return;
@@ -24,7 +23,7 @@ void test1 ()
   std::vector<std::string> data_fields;
   data_fields.push_back(std::string("YPR"));
   data_handler.setDataFields(data_fields);
-  */
+  data_handler.printDataInTerminal(true);
   pfd_test.setTranslation(glm::vec3(0.5f, 0.f, 0.f));
   pfd_test.setScale(glm::vec3(0.5, 1, 1));
   WindowHandler w("BirdWatcher");
@@ -32,7 +31,7 @@ void test1 ()
 
   w.initialSetup();
   while (w.windowOpen()) {
-    //data_handler.updateData();
+    data_handler.updateData();
     w.update();
   }
   w.deleteDisplay();

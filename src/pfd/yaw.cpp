@@ -17,11 +17,9 @@ YawIndicator::YawIndicator () :
 
 void YawIndicator::setTranslation (glm::vec3 translation)
 {
-  compass.setTranslation(glm::vec3(translation[0]+0,
-                                   translation[1]+0,
-                                   translation[2]+0));
+  compass.setTranslation(translation);
   indicator.setTranslation(glm::vec3(translation[0]+0,
-                                     translation[1]+0,
+                                     translation[1]+0.032,
                                      translation[2]+0));
 }
 
@@ -32,7 +30,7 @@ void YawIndicator::setScale (glm::vec3 scale)
                              scale[1]*0.2,
                              scale[2]*1));
   indicator.setScale(glm::vec3(scale[0]*0.07,
-                               scale[1]*0.30,
+                               scale[1]*0.243,
                                scale[2]*1));
 }
 
@@ -51,8 +49,7 @@ bool YawIndicator::init ()
     std::cout << "Could not init " << compass.name() << "\n";
     all_ok = false;
   } else {
-    //texTransLoc = glGetUniformLocation(compass.getShaderProgram(), "texTransf");
-    //std::cout << texTransLoc << std::endl;
+    texTransLoc = glGetUniformLocation(compass.getShaderProgram(), "texTransf");
   }
   if (not indicator.init()) {
     std::cout << "Could not init " << indicator.name() << "\n";
@@ -64,7 +61,7 @@ bool YawIndicator::init ()
 
 void YawIndicator::draw ()
 {
-  //updateTextureTransform();
+  updateTextureTransform();
   compass.draw();
   indicator.draw();
 }
@@ -84,8 +81,11 @@ void YawIndicator::setYaw (float yaw)
 
 void YawIndicator::updateTextureTransform ()
 {
-  glm::mat4 TexTrans(1.0);
+  glm::mat4 TexTrans(1.f);
+  TexTrans = glm::translate(TexTrans, glm::vec3(0.5,0.5,0));
+  TexTrans = glm::rotate(TexTrans, float(yaw*M_PI/180.f), glm::vec3(0,0,-1));
+  TexTrans = glm::scale(TexTrans, glm::vec3(1, 0.2, 1));
+  TexTrans = glm::translate(TexTrans, glm::vec3(-0.5,1.5,0));
   glUseProgram(compass.getShaderProgram());
-  TexTrans = glm::scale(TexTrans, glm::vec3(1, 5, 1));
   glUniformMatrix4fv(texTransLoc, 1, GL_FALSE, &TexTrans[0][0]);
 }

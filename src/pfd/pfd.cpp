@@ -46,7 +46,7 @@ void PFD::setTranslation (glm::vec3 translation)
   attitude_ind.setTranslation(translation);
   background.setTranslation(translation);
   yaw_ind.setTranslation(glm::vec3(translation[0]+0,
-                                   translation[1]+0,
+                                   translation[1]-0.85,
                                    translation[2]));
 }
 
@@ -59,8 +59,8 @@ void PFD::setScale (glm::vec3 scale)
   background.setScale(glm::vec3(scale[0]*2,
                                 scale[1]*2,
                                 scale[2]*1));
-  yaw_ind.setScale(glm::vec3(scale[0]*1,
-                             scale[1]*1,
+  yaw_ind.setScale(glm::vec3(scale[0]*1.5,
+                             scale[1]*1.5,
                              scale[2]*1));
 }
 
