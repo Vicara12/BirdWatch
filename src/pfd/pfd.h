@@ -5,6 +5,7 @@
 #include "winhandler/rectangle.h"
 #include "attitude.h"
 #include "yaw.h"
+#include "barindicator.h"
 #include <glm/ext/vector_float3.hpp>
 
 class PFD : public Drawable
@@ -25,6 +26,7 @@ class PFD : public Drawable
     AttitudeInd attitude_ind;
     YawIndicator yaw_ind;
     Rectangle background;
+    BarIndicator altimeter;
 };
 
 #endif

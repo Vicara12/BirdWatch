@@ -11,9 +11,10 @@ PFD::PFD ()
 
 void PFD::draw ()
 {
-  background.draw();
+  //background.draw();
   attitude_ind.draw();
   yaw_ind.draw();
+  altimeter.draw();
 }
 
 bool PFD::init ()
@@ -30,6 +31,10 @@ bool PFD::init ()
   if (not yaw_ind.init()) {
     std::cout << "Could not init " << yaw_ind.name() << "\n";
     all_ok = false;
+  }
+  if (not altimeter.init()) {
+      std::cout << "Could not init " << altimeter.name() << "\n";
+      all_ok = false;
   }
   return all_ok;
 }
