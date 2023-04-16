@@ -2,6 +2,7 @@
 #define DRAWABLE_H_
 
 #include <GL/glew.h>
+#include <glm/ext/matrix_transform.hpp>
 #include <iostream>
 
 class Drawable
@@ -12,6 +13,9 @@ class Drawable
     virtual void draw ();
     virtual bool init () = 0;
     virtual std::string name () = 0;
+    virtual void setScale (glm::vec3 scale) = 0;
+    virtual void setTranslation (glm::vec3 translation) = 0;
+    unsigned getShaderProgram () const;
 
   protected:
     static bool loadShader (GLenum shader_type, const std::string &path, unsigned &shader);

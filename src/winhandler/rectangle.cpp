@@ -98,12 +98,6 @@ void Rectangle::setRotation (float angle)
 }
 
 
-unsigned Rectangle::getShaderProgram ()
-{
-  return shader_program;
-}
-
-
 void Rectangle::setPreTG (glm::mat4 PreTG)
 {
   this->preTG = glm::mat4(PreTG);

@@ -7,7 +7,7 @@ BarIndicator::BarIndicator ()
 
 void BarIndicator::draw ()
 {
-  background.draw();
+  //background.draw();
   //number_ind.draw();
 }
 

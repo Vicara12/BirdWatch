@@ -60,6 +60,10 @@ class TextRenderer : public Drawable
     void loadVertexArrays ();
     unsigned getTextWidth (const TextElement &text);
 
+    // these functions do not do anything
+    void setScale (glm::vec3);
+    void setTranslation (glm::vec3);
+
     FT_Library ft;
     FT_Face face;
     Character characters[128];

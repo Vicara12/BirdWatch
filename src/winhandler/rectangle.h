@@ -11,7 +11,6 @@ class Rectangle : public Drawable
     void changeTexture (std::string texture_path, bool has_alpha = true,
                         unsigned border_mode = GL_REPEAT);
     void changeShaders (std::string shader_path);
-    unsigned getShaderProgram ();
     virtual void draw ();
     virtual bool init ();
     virtual std::string name ();

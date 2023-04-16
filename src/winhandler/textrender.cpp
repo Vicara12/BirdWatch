@@ -258,3 +258,7 @@ void TextRenderer::changeDefaultWindowSize (unsigned window_width, unsigned wind
   this->window_width = window_width;
   this->window_height = window_height;
 }
+
+
+void TextRenderer::setTranslation (glm::vec3) {}
+void TextRenderer::setScale (glm::vec3) {}
