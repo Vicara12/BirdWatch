@@ -1,20 +1,17 @@
 #ifndef YAW_H_
 #define YAW_H_
 
-#include "winhandler/drawable.h"
+#include "winhandler/composite.h"
 #include "winhandler/rectangle.h"
 
-class YawIndicator : public Drawable
+class YawIndicator : public CompositeElement
 {
   public:
     YawIndicator ();
 
-    void draw ();
     bool init ();
+    void draw ();
     std::string name ();
-    void setTranslation (glm::vec3 translation);
-    void setScale (glm::vec3 scale);
-    void setRotation (float angle);
     void setYaw (float yaw);
 
   private:

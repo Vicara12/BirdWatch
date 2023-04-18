@@ -7,63 +7,30 @@ YawIndicator::YawIndicator () :
   compass.setName("Yaw Compass");
   compass.changeShaders("./res/shaders/compass");
   compass.changeTexture("./res/textures/pfd/compass.png", true, GL_CLAMP_TO_EDGE);
+  addPaneElement(PaneElement(&compass, glm::vec3(1,0.2,1), glm::vec3(0)));
+
   indicator.setName("Yaw Mark");
   indicator.changeTexture("./res/textures/pfd/yaw_mark.png", true, GL_CLAMP_TO_EDGE);
-  setTranslation(glm::vec3(0.f));
-  setScale(glm::vec3(1.f));
-  setRotation(0.f);
+  addPaneElement(PaneElement(&indicator, glm::vec3(0.07,0.243,1), glm::vec3(0,0.032,0)));
 }
 
 
-void YawIndicator::setTranslation (glm::vec3 translation)
-{
-  compass.setTranslation(translation);
-  indicator.setTranslation(glm::vec3(translation[0]+0,
-                                     translation[1]+0.032,
-                                     translation[2]+0));
-}
-
-
-void YawIndicator::setScale (glm::vec3 scale)
-{
-  compass.setScale(glm::vec3(scale[0]*1.0,
-                             scale[1]*0.2,
-                             scale[2]*1));
-  indicator.setScale(glm::vec3(scale[0]*0.07,
-                               scale[1]*0.243,
-                               scale[2]*1));
-}
-
-
-void YawIndicator::setRotation (float angle)
-{
-  compass.setRotation(angle);
-  indicator.setRotation(angle);
-}
 
 
 bool YawIndicator::init ()
 {
-  bool all_ok = true;
-  if (not compass.init()) {
-    std::cout << "Could not init " << compass.name() << "\n";
-    all_ok = false;
-  } else {
+  if (CompositeElement::init()) {
     texTransLoc = glGetUniformLocation(compass.getShaderProgram(), "texTransf");
-  }
-  if (not indicator.init()) {
-    std::cout << "Could not init " << indicator.name() << "\n";
-    all_ok = false;
-  }
-  return all_ok;
+    return true;
+  } else
+    return false;
 }
 
 
 void YawIndicator::draw ()
 {
   updateTextureTransform();
-  compass.draw();
-  indicator.draw();
+  CompositeElement::draw();
 }
 
 
