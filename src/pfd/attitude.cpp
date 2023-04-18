@@ -10,12 +10,12 @@ AttitudeInd::AttitudeInd () : pitch(0), roll(0)
   attitude_ind.changeShaders("./res/shaders/attitude");
   attitude_ind.changeTexture("./res/textures/pfd/PFD_background.png",
                            true, GL_CLAMP_TO_EDGE);
+  addPaneElement(PaneElement(&attitude_ind));
+
   angle_ind.setName("Angle Indicator");
   angle_ind.changeTexture("./res/textures/pfd/roll_ind.png",
                            true, GL_CLAMP_TO_EDGE);
-  setTranslation(glm::vec3(0.f));
-  setScale(glm::vec3(1.f));
-  setRotation(0.f);
+  addPaneElement(PaneElement(&angle_ind));
 }
 
 
@@ -60,27 +60,6 @@ bool AttitudeInd::init ()
 std::string AttitudeInd::name ()
 {
   return "Attitude Indicator";
-}
-
-
-void AttitudeInd::setTranslation (glm::vec3 translation)
-{
-  attitude_ind.setTranslation(translation);
-  angle_ind.setTranslation(translation);
-}
-
-
-void AttitudeInd::setScale (glm::vec3 scale)
-{
-  attitude_ind.setScale(scale);
-  angle_ind.setScale(scale);
-}
-
-
-void AttitudeInd::setRotation (float angle)
-{
-  attitude_ind.setRotation(angle);
-  angle_ind.setRotation(angle);
 }
 
 

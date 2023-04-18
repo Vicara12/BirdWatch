@@ -60,10 +60,6 @@ void CompositeElement::setTranslation (glm::vec3 translation)
 
 void CompositeElement::setScale (glm::vec3 scale)
 {
-  for (PaneElement pe : elements) {
-    std::cout << "Comp scale for " << pe.drawable->name() << ": "
-              << scale[0] << "," << scale[1] << "," << scale[2] << " * "
-              << pe.scale[0] << "," << pe.scale[1] << "," << pe.scale[2] << std::endl;
+  for (PaneElement pe : elements)
     pe.drawable->setScale(scale * pe.scale);
-  }
 }

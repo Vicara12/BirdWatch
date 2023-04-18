@@ -6,7 +6,6 @@
 #include "attitude.h"
 #include "yaw.h"
 #include "barindicator.h"
-#include <glm/ext/vector_float3.hpp>
 
 class PFD : public CompositeElement
 {
