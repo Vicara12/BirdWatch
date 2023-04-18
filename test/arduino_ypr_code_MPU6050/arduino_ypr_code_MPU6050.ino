@@ -104,7 +104,7 @@ void setup() {
 }
 
 
-bool binary = true;
+bool binary = false;
 
 // ================================================================
 // ===                    MAIN PROGRAM LOOP                     ===

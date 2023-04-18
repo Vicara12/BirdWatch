@@ -12,20 +12,23 @@
 void test1 ()
 {
   PFD pfd_test;
+  pfd_test.setTranslation(glm::vec3(0.5f, 0.f, 0.f));
+  pfd_test.setScale(glm::vec3(0.5, 1, 1));
+
   SerialSource serial_source("USB0", B9600);
   if (not serial_source.serialInitiated())
     return;
-  serial_source.setDataFormat(DF_BINARY);
-  serial_source.setFieldsPerLine(12);
+  serial_source.setDataFormat(DF_ASCII);
+  serial_source.setFieldsPerLine(3);
+
   DataHandler data_handler;
   data_handler.setDataSource(&serial_source);
   data_handler.setPFD(&pfd_test);
   std::vector<std::string> data_fields;
   data_fields.push_back(std::string("YPR"));
   data_handler.setDataFields(data_fields);
-  data_handler.printDataInTerminal(true);
-  pfd_test.setTranslation(glm::vec3(0.5f, 0.f, 0.f));
-  pfd_test.setScale(glm::vec3(0.5, 1, 1));
+  //data_handler.printDataInTerminal(true);
+
   WindowHandler w("BirdWatcher");
   w.addDrawable(&pfd_test);
 
