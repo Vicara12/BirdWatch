@@ -1,24 +1,41 @@
 #include "composite.h"
 
 
-CompositeElement::CompositeElement ()
+PaneElement_::PaneElement_ (Drawable *drawable_, glm::vec3 scale_, glm::vec3 translation_)
 {
+  drawable = drawable_;
+  scale = scale_;
+  translation = translation_;
 }
+
+
+PaneElement_::PaneElement_ (Drawable *drawable_)
+{
+  drawable = drawable_;
+  scale = glm::vec3(1);
+  translation = glm::vec3(0);
+}
+
+
+CompositeElement::CompositeElement () :
+  scale(glm::vec3(1)),
+  translation(glm::vec3(0))
+{}
 
 
 void CompositeElement::draw ()
 {
-  for (PaneElement *pe : elements)
-    pe->drawable->draw();
+  for (PaneElement pe : elements)
+    pe.drawable->draw();
 }
 
 
 bool CompositeElement::init ()
 {
   bool all_ok = true;
-  for (PaneElement *pe : elements) {
-    if (not pe->drawable->init()) {
-      std::cout << "ERROR: Could not init " << pe->drawable->name() << std::endl;
+  for (PaneElement pe : elements) {
+    if (not pe.drawable->init()) {
+      std::cout << "ERROR: Could not init " << pe.drawable->name() << std::endl;
       all_ok = false;
     }
   }
@@ -26,22 +43,23 @@ bool CompositeElement::init ()
 }
 
 
-void CompositeElement::addElement (PaneElement *new_element)
+void CompositeElement::addPaneElement (PaneElement new_element)
 {
+  new_element.drawable->setTranslation(translation + new_element.translation);
+  new_element.drawable->setScale(scale * new_element.scale);
   elements.push_back(new_element);
 }
 
 
 void CompositeElement::setTranslation (glm::vec3 translation)
 {
-  for (PaneElement *pe : elements)
-    pe->drawable->setScale(translation + pe->translation);
+  for (PaneElement pe : elements)
+    pe.drawable->setTranslation(translation + pe.translation);
 }
 
 
 void CompositeElement::setScale (glm::vec3 scale)
 {
-  for (PaneElement *pe : elements)
-    pe->drawable->setTranslation(scale * pe->scale);
+  for (PaneElement pe : elements)
+    pe.drawable->setScale(scale * pe.scale);
 }
-

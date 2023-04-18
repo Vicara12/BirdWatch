@@ -8,11 +8,11 @@
 
 typedef struct PaneElement_ {
   Drawable *drawable;
-  glm::vec3 scale, translation;
-  std::string texture = "";
-  // first element of pair must be texture path and second var name in fs
-  std::vector<std::pair<std::string,std::string>> extra_textures;
-  std::string shader = "";
+  glm::vec3 scale = glm::vec3(1);
+  glm::vec3 translation = glm::vec3(0);
+
+  PaneElement_(Drawable *drawable_);
+  PaneElement_(Drawable *drawable_, glm::vec3 scale_, glm::vec3 translation_);
 } PaneElement;
 
 
@@ -23,12 +23,13 @@ class CompositeElement : public Drawable
 
     virtual void draw ();
     virtual bool init ();
-    void addElement (PaneElement *new_element);
+    void addPaneElement (PaneElement new_element);
     void setTranslation (glm::vec3 translation);
     void setScale (glm::vec3 scale);
 
   private:
-    std::vector<PaneElement*> elements;
+    glm::vec3 scale, translation;
+    std::vector<PaneElement> elements;
 };
 
  #endif
