@@ -12,6 +12,7 @@ class DataSource
     DataSource ();
     virtual bool newDataAvailable () = 0;
     virtual std::vector<float> getLatestData () = 0;
+    virtual bool initOk () const = 0;
     void setDataFormat (DataFormat data_format);
     void setFieldsPerLine (int expected_line_size);
     void setAsciiDataSeparator (char separator);

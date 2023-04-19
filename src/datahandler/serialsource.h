@@ -10,8 +10,8 @@ class SerialSource : public DataSource
   public:
     // item size is the size of float in bytes
     SerialSource (std::string port, int baud, int line_buffer_size = 2048);
-    bool serialInitiated ();
     bool newDataAvailable ();
+    bool initOk () const;
     std::vector<float> getLatestData ();
     ~SerialSource();
 

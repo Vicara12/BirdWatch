@@ -27,7 +27,7 @@ bool SerialSource::newDataAvailable ()
 }
 
 
-bool SerialSource::serialInitiated()
+bool SerialSource::initOk () const
 {
   return serial_init_ok;
 }
