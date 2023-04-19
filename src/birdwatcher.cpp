@@ -14,7 +14,10 @@ BirdWatcher::BirdWatcher () :
 
 BirdWatcher::~BirdWatcher ()
 {
-  // TODO destructor
+  for (Drawable *pannel : pannels)
+    delete pannel;
+  delete data_handler.getDataSource();
+  window.deleteDisplay();
 }
 
 
@@ -23,7 +26,7 @@ bool BirdWatcher::init ()
   TextRenderer *text_renderer = TextRenderer::getInstance();
   text_renderer->changeFontSize(200);
 
-  return initDataSource() and addPFD() and initWindowHandler();
+  return addPFD() and initDataSource() and initWindowHandler();
 }
 
 
@@ -32,9 +35,8 @@ void BirdWatcher::run ()
   TextRenderer *txt = TextRenderer::getInstance();
   bool no_data_drawn = false;
   unsigned long no_data_txt_id = 0;
-  window.initialSetup();
   while (window.windowOpen()) {
-    //data_handler.updateData();
+    data_handler.updateData();
 
     // data connection has been lost, add NO DATA text
     if (not no_data_drawn and not data_handler.checkDataLink()) {
@@ -50,7 +52,6 @@ void BirdWatcher::run ()
 
     window.update();
   }
-  window.deleteDisplay();
 }
 
 
@@ -87,5 +88,6 @@ bool BirdWatcher::initWindowHandler ()
   for (Drawable *pannel : pannels)
     window.addDrawable(pannel);
   window.addDrawable(TextRenderer::getInstance());
+  window.initialSetup();
   return true;
 }

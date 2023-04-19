@@ -74,6 +74,7 @@ void SerialSource::processNewData ()
           data_available = true;
           time_last_data_read = getMillis();
         }
+        if (data_available)
         current_line[cline_pos-1] = 0; // -1 to overwrite carriage return
         last_line_size = cline_pos-1;
         swapBuffers();

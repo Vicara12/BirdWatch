@@ -17,6 +17,7 @@ class DataHandler
   public:
     DataHandler ();
     void setDataSource (DataSource *data_source);
+    DataSource* getDataSource ();
     void setDataFields (const std::vector<std::string> &data_fields);
     void setPFD (PFD *pfd);
     void updateData ();

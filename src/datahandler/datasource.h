@@ -10,6 +10,7 @@ class DataSource
 {
   public:
     DataSource ();
+    virtual ~DataSource ();
     virtual bool newDataAvailable () = 0;
     virtual std::vector<float> getLatestData () = 0;
     virtual bool initOk () const = 0;

@@ -9,6 +9,7 @@ class Drawable
 {
   public:
     Drawable ();
+    virtual ~Drawable ();
 
     virtual void draw ();
     virtual bool init () = 0;

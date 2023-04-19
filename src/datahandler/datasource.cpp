@@ -10,6 +10,9 @@ DataSource::DataSource () :
 }
 
 
+DataSource::~DataSource () {}
+
+
 void DataSource::setDataFormat (DataFormat data_format)
 {
   this->data_format = data_format;
