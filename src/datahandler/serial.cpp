@@ -29,7 +29,15 @@ bool SerialReader::init (std::string port_name, int baud_rate)
   initialized = false;
 
   if (serial_port < 0) {
-    printError("when opening port");
+    printError("when opening port "+port_name);
+    printf("\n   Available ports are:");
+    std::vector<std::string> ports = getAvailablePorts();
+    for (std::string port : ports)
+      // there are many ports that are numeric, avoid them
+      if (port[0] < '0' or port[0] > '9' )
+        printf(" %s", port.c_str());
+    printf("\n");
+
     return false;
   }
   if(flock(serial_port, LOCK_EX | LOCK_NB) == -1)
