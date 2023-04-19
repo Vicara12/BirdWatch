@@ -3,7 +3,8 @@
 
 DataHandler::DataHandler () :
   pfd_provided(false),
-  print_in_term(false)
+  print_in_term(false),
+  no_data_timeout(250)
 {
   data_format["YPR"] = -1;
 }
@@ -63,4 +64,16 @@ void DataHandler::setDataFields (const std::vector<std::string> &data_fields)
 void DataHandler::printDataInTerminal(bool print)
 {
   print_in_term = print;
+}
+
+
+void DataHandler::setNoDataTimeout (long milliseconds)
+{
+  no_data_timeout = milliseconds;
+}
+
+
+bool DataHandler::checkDataLink ()
+{
+  return data_source->getTimeLastData() < no_data_timeout;
 }

@@ -21,6 +21,9 @@ class DataHandler
     void setPFD (PFD *pfd);
     void updateData ();
     void printDataInTerminal (bool print);
+    void setNoDataTimeout (long milliseconds);
+    // tells if data has been received in the last x milliseconds (with x = noDataTimeout)
+    bool checkDataLink ();
 
   private:
     PFD *pfd;
@@ -28,6 +31,7 @@ class DataHandler
     std::map<std::string, int> data_format;
     bool pfd_provided;
     bool print_in_term;
+    long no_data_timeout;
 };
 
 #endif

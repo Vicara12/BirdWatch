@@ -49,9 +49,7 @@ std::vector<float> SerialSource::getLatestData ()
     std::string element;
     while (std::getline(ss, element, separator))
       try {
-        std::cout << "pre\n";
         data.push_back(std::stof(element));
-        std::cout << "post\n";
       } catch ( ... ) {
         data.push_back(0);
         std::cout << "WARNING: non numerical field found in line:" << std::endl;
@@ -72,8 +70,10 @@ void SerialSource::processNewData ()
       if (buffer[i] == '\n' and cline_pos > 0 and current_line[cline_pos-1] == '\r') {
         // expected_line_size+1 because carriage return is not taken into account
         // if data_format is ascii line length in bytes is undefined
-        if (data_format == DF_ASCII or !line_size_fixed or cline_pos == expected_line_size*4+1)
+        if (data_format == DF_ASCII or !line_size_fixed or cline_pos == expected_line_size*4+1) {
           data_available = true;
+          time_last_data_read = getMillis();
+        }
         current_line[cline_pos-1] = 0; // -1 to overwrite carriage return
         last_line_size = cline_pos-1;
         swapBuffers();

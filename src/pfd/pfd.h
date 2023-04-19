@@ -14,9 +14,11 @@ class PFD : public CompositeElement
     PFD();
     std::string name ();
     void setYPR (float yaw, float pitch, float roll);
+    void setDataLinkStatus (bool data_received);
 
   private:
 
+    bool data_received;
     AttitudeInd attitude_ind;
     YawIndicator yaw_ind;
     Rectangle background;
