@@ -133,6 +133,9 @@ unsigned long TextRenderer::addText (const std::string &text, float angle, float
   te.color = color;
   te.align_to = alignment;
   te.id = next_available_id;
+  // if not initiated this will be done in the init function
+  if (initiated)
+    te.width = getTextWidth(te);
   next_available_id++;
   texts.push_back(te);
   return te.id;
