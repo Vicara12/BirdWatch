@@ -7,6 +7,9 @@ Drawable::Drawable ()
 }
 
 
+Drawable::~Drawable () {}
+
+
 void Drawable::draw()
 {
   glUseProgram(shader_program);

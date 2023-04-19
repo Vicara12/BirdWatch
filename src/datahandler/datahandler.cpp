@@ -77,3 +77,9 @@ bool DataHandler::checkDataLink ()
 {
   return data_source->getTimeLastData() < no_data_timeout;
 }
+
+
+DataSource* DataHandler::getDataSource ()
+{
+  return data_source;
+}
