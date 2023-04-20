@@ -1,8 +1,15 @@
 #include "birdwatcher.h"
 #include "datahandler/serial.h"
+#include <fstream>
+using namespace std;
 
 void echoSerial ()
 {
+  ofstream file("test/out_bin.txt");
+  if (not file.is_open()) {
+    std::cout << "Nanai\n";
+    return;
+  }
   SerialReader serial;
   std::vector<std::string> ports = SerialReader::getAvailablePorts("USB");
   if (ports.size() == 0)
@@ -16,14 +23,14 @@ void echoSerial ()
       char buff [2048];
       while (serial.getNAvailableBytes() == 0);
       int n = serial.readPort(buff, 2048);
-      for (int i = 0; i < n; i++) std::cout << buff[i];
+      for (int i = 0; i < n; i++) file << "." << buff[i];
     }
   }
 }
 
 int main ()
 {
-  BirdWatcher();
-  //echoSerial();
+  //BirdWatcher();
+  echoSerial();
   return 0;
 }
