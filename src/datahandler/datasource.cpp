@@ -7,6 +7,7 @@ DataSource::DataSource () :
   separator(' '),
   time_last_data_read(0)
 {
+  initial_time = getMillis();
 }
 
 
@@ -44,5 +45,11 @@ long long DataSource::getMillis () const
 {
   struct timeval tv;
   gettimeofday(&tv,NULL);
-  return (((long long)tv.tv_sec)*1000)+(tv.tv_usec/1000);
+  return (((long long)tv.tv_sec)*1000)+(tv.tv_usec/1000) - initial_time;
+}
+
+
+bool DataSource::thereIsMoreData () const
+{
+  return false;
 }

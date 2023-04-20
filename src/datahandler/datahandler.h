@@ -25,6 +25,7 @@ class DataHandler
     void setNoDataTimeout (long milliseconds);
     // tells if data has been received in the last x milliseconds (with x = noDataTimeout)
     bool checkDataLink ();
+    bool thereIsMoreData () const;
 
   private:
     PFD *pfd;

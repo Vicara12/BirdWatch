@@ -18,6 +18,7 @@ class DataSource
     void setFieldsPerLine (int expected_line_size);
     void setAsciiDataSeparator (char separator);
     long long getTimeLastData () const;
+    virtual bool thereIsMoreData () const;
 
   protected:
     long long getMillis () const;
@@ -26,6 +27,7 @@ class DataSource
     bool line_size_fixed;
     int expected_line_size;
     char separator;
+    long long initial_time;
     long long time_last_data_read; // classes that inherit from this must
                                    // keep this value up to date
 };

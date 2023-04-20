@@ -83,3 +83,9 @@ DataSource* DataHandler::getDataSource ()
 {
   return data_source;
 }
+
+
+bool DataHandler::thereIsMoreData () const
+{
+  return data_source->thereIsMoreData();
+}

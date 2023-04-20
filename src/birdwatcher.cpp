@@ -1,5 +1,6 @@
 #include "birdwatcher.h"
 #include "datahandler/serialsource.h"
+#include "datahandler/filesource.h"
 #include "winhandler/textrender.h"
 
 
@@ -34,12 +35,18 @@ void BirdWatcher::run ()
 {
   TextRenderer *txt = TextRenderer::getInstance();
   bool no_data_drawn = false;
+  bool no_more_data_drawn = false;
   unsigned long no_data_txt_id = 0;
   while (window.windowOpen()) {
     data_handler.updateData();
 
+    if (not no_more_data_drawn and not data_handler.thereIsMoreData()) {
+      no_data_txt_id = txt->addText("END OF FILE", 0, 0.5, glm::vec2(0,-0.05),
+                                    glm::vec3(1,0,0), TXT_CENTER);
+      no_data_drawn = true;
+    }
     // data connection has been lost, add NO DATA text
-    if (not no_data_drawn and not data_handler.checkDataLink()) {
+    else if (not no_data_drawn and not data_handler.checkDataLink()) {
       no_data_txt_id = txt->addText("NO DATA", 0, 0.5, glm::vec2(0,-0.05),
                                     glm::vec3(1,0,0), TXT_CENTER);
       no_data_drawn = true;
@@ -68,13 +75,25 @@ bool BirdWatcher::addPFD ()
 
 bool BirdWatcher::initDataSource ()
 {
-  SerialSource *serial_source = new SerialSource("USB0", B9600);
-  if (not serial_source->initOk())
-    return false;
-  serial_source->setDataFormat(DF_ASCII);
-  serial_source->setFieldsPerLine(3);
+  bool use_serial_source = false;
+  DataSource *ds;
+  if (use_serial_source) {
+    SerialSource *serial_source = new SerialSource("USB0", B9600);
+    if (not serial_source->initOk())
+      return false;
+    serial_source->setDataFormat(DF_ASCII);
+    serial_source->setFieldsPerLine(3);
+    ds = serial_source;
+  } else {
+    FileSource *file_source = new FileSource("./test/out_ascii.txt");
+    if (not file_source->initOk())
+      return false;
+    file_source->setDataFormat(DF_ASCII);
+    file_source->setFieldsPerLine(3);
+    ds = file_source;
+  }
 
-  data_handler.setDataSource(serial_source);
+  data_handler.setDataSource(ds);
   std::vector<std::string> data_fields;
   data_fields.push_back(std::string("YPR"));
   data_handler.setDataFields(data_fields);

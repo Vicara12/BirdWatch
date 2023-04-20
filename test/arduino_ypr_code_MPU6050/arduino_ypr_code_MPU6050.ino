@@ -105,6 +105,7 @@ void setup() {
 
 
 bool binary = false;
+bool timestamp = true;
 
 // ================================================================
 // ===                    MAIN PROGRAM LOOP                     ===
@@ -129,6 +130,8 @@ void loop() {
             buffer[i] = ((char*)(ypr))[i];
           Serial.println(buffer);
         } else {
+          Serial.print(millis());
+          Serial.print(" ");
           Serial.print(ypr[0]);
           Serial.print(" ");
           Serial.print(ypr[1]);

@@ -5,9 +5,11 @@ no particular order:
 
 * version 0
   * File data source to be able to see logged files
+  * Fix angle bug
   * JSON configuration
   * Abstract instrument class: DataHandler will provide a dictionary with data fields
-  
+  * Comments in incomming data and headers (that is, lines that are not interpreted as data)
+  * Fix \n with binary data
 
 * version 1
   * Altimeter and speed
