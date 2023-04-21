@@ -65,8 +65,10 @@ std::string AttitudeInd::name ()
 
 void AttitudeInd::setPitchRoll (float pitch, float roll)
 {
-  if (pitch > 90)       pitch = 90;
-  else if (pitch < -90) pitch = -90;
+  while (pitch > 180) pitch -= 360;
+  while (pitch <= -180) pitch += 360;
+  if (pitch > 90)       pitch = 180 - pitch;
+  else if (pitch < -90) pitch = -180 - pitch;
   this->pitch = pitch;
   this->roll = roll;
 }
