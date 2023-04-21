@@ -75,7 +75,7 @@ bool BirdWatcher::addPFD ()
 
 bool BirdWatcher::initDataSource ()
 {
-  bool use_serial_source = false;
+  bool use_serial_source = true;
   DataSource *ds;
   if (use_serial_source) {
     SerialSource *serial_source = new SerialSource("USB0", B9600);

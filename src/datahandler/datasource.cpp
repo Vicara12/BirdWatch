@@ -51,5 +51,5 @@ long long DataSource::getMillis () const
 
 bool DataSource::thereIsMoreData () const
 {
-  return false;
+  return true;
 }
