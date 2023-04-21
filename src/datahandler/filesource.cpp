@@ -48,6 +48,11 @@ bool FileSource::initOk () const
 
 void FileSource::parseNewLine (int current_recursion)
 {
+  if (data_format == DF_BINARY) {
+    std::cout << "ERROR: binary format still not supported for file source" << std::endl;
+    reached_eof = true;
+    return;
+  }
   reached_eof = file.eof();
   // if there has been more than 5 attempts to read a line there is something
   // very wrong with the file, abort
