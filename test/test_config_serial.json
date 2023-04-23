@@ -1,0 +1,15 @@
+{
+  "window_height": 1900,
+  "window_width": 900,
+  "data_format": "binary",
+  "data_separator": " ",
+  "data_fields": ["YPR"],
+  "print_data": true,
+  "no_data_timeout": 250,
+
+  "data_source" : {
+    "type": "serial",
+    "port": "USB0",
+    "baud": 9600
+  }
+}
