@@ -4,17 +4,33 @@
 #include "winhandler/textrender.h"
 
 
-BirdWatcher::BirdWatcher () :
+BirdWatcher::BirdWatcher (int argc, char **argv) :
+  init_ok(false),
   window("Bird Watcher")
 {
-  if (not init())
+  std::string config_file_path;
+  if (argc != 2) {
+    std::cout << "Config file path not provided as argument." << std::endl
+              << "Path to the config file to be used: ";
+    std::cin >> config_file_path;
+  } else
+    config_file_path = std::string(argv[1]);
+
+  if (not init(config_file_path))
     return;
+
+  init_ok = true;
   run();
 }
 
 
 BirdWatcher::~BirdWatcher ()
 {
+  // if the program did not init well, these objects will not exist (removing
+  // them will cause sigfault)
+  if (not init_ok)
+    return;
+
   for (Drawable *pannel : pannels)
     delete pannel;
   delete data_handler.getDataSource();
@@ -22,10 +38,13 @@ BirdWatcher::~BirdWatcher ()
 }
 
 
-bool BirdWatcher::init ()
+bool BirdWatcher::init (std::string config_file_path)
 {
   TextRenderer *text_renderer = TextRenderer::getInstance();
   text_renderer->changeFontSize(200);
+
+  if (not config.parseConfigFile(config_file_path))
+    return false;
 
   return addPFD() and initDataSource() and initWindowHandler();
 }
@@ -75,29 +94,109 @@ bool BirdWatcher::addPFD ()
 
 bool BirdWatcher::initDataSource ()
 {
-  bool use_serial_source = true;
-  DataSource *ds;
-  if (use_serial_source) {
-    SerialSource *serial_source = new SerialSource("USB0", B9600);
-    if (not serial_source->initOk())
+  std::string data_source_type;
+  if (not config.getDataSourceField("type", data_source_type)) {
+    std::cout << "ERROR: config file does not contain data_source \"type\" field"
+              << std::endl;
+    return false;
+  }
+
+  DataSource *ds = NULL;
+  if (data_source_type == "serial") {
+    if (not initSerialSource(&ds))
       return false;
-    serial_source->setDataFormat(DF_ASCII);
-    serial_source->setFieldsPerLine(3);
-    ds = serial_source;
+  } else if (data_source_type == "file") {
+    if (not initFileSource(&ds))
+      return false;
   } else {
-    FileSource *file_source = new FileSource("./test/out_ascii.txt");
-    if (not file_source->initOk())
-      return false;
-    file_source->setDataFormat(DF_ASCII);
-    file_source->setFieldsPerLine(3);
-    ds = file_source;
+    std::cout << "ERROR: config file has invalid data_source \"type\" field: "
+              << data_source_type << std::endl;
+    return false;
+  }
+
+  std::string data_format;
+  if (not config.getField("data_format", data_format)) {
+    std::cout << "ERROR: config file does not contain data_format field" << std::endl;
+    return false;
+  } else if (data_format == "ascii")
+    ds->setDataFormat(DF_ASCII);
+  else if (data_format == "binary")
+    ds->setDataFormat(DF_BINARY);
+  else {
+    std::cout << "ERROR: invalid data_format field, supported values are ascii and binary"
+              << std::endl;
+    return false;
   }
 
   data_handler.setDataSource(ds);
   std::vector<std::string> data_fields;
-  data_fields.push_back(std::string("YPR"));
+  if (not config.getField("data_fields", data_fields)) {
+    std::cout << "ERROR: config file does not contain \"data_fields\"" << std::endl;
+    return false;
+  }
   data_handler.setDataFields(data_fields);
-  data_handler.printDataInTerminal(true);
+
+  bool print_data = false;
+  config.getField("print_data", print_data);
+  data_handler.printDataInTerminal(print_data);
+
+  return true;
+}
+
+bool BirdWatcher::initSerialSource (DataSource **ds)
+{
+  std::string port;
+  int baud;
+
+  if (not config.getDataSourceField("port", port)) {
+    std::cout << "ERROR: config file does not contain data_source \"port\" field" << std::endl;
+    return false;
+  }
+
+  if (not config.getDataSourceField("baud", baud)) {
+    std::cout << "ERROR: config file does not contain data_source \"baud\" field" << std::endl;
+    return false;
+  } else {
+    // convert from integer with baud to baud definitions (ex: 9600 -> B9600)
+    baud = SerialSource::int2Baud(baud);
+    if (baud == -1) {
+      std::cout << "ERROR: invalid baud rate" << std::endl;
+      return false;
+    }
+  }
+
+  int line_buffer_size = -1;
+  config.getDataSourceField("line_buffer_size", line_buffer_size);
+
+  SerialSource *serial_source;
+  if (line_buffer_size != -1)
+    serial_source = new SerialSource(port, baud, line_buffer_size);
+  else
+    serial_source = new SerialSource(port, baud);
+
+  if (not serial_source->initOk())
+    return false;
+
+  *ds = serial_source;
+  return true;
+}
+
+
+bool BirdWatcher::initFileSource (DataSource **ds)
+{
+  std::string file_path;
+  if (not config.getDataSourceField("file_path", file_path)) {
+    std::cout << "ERROR: config file does not contain data_source \"file_path\" field"
+              << std::endl;
+    return false;
+  }
+
+  FileSource *file_source = new FileSource(file_path);
+
+  if (not file_source->initOk())
+    return false;
+
+  *ds = file_source;
   return true;
 }
 

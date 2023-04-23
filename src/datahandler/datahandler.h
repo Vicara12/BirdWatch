@@ -34,6 +34,7 @@ class DataHandler
     bool pfd_provided;
     bool print_in_term;
     long no_data_timeout;
+    bool data_source_provided;
 };
 
 #endif

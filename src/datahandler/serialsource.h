@@ -15,6 +15,8 @@ class SerialSource : public DataSource
     std::vector<float> getLatestData ();
     ~SerialSource();
 
+    static int int2Baud (int baud);
+
   private:
     void processNewData ();
     void swapBuffers ();

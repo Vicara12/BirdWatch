@@ -4,7 +4,8 @@
 DataHandler::DataHandler () :
   pfd_provided(false),
   print_in_term(false),
-  no_data_timeout(250)
+  no_data_timeout(250),
+  data_source_provided(false)
 {
   data_format["YPR"] = -1;
 }
@@ -12,6 +13,7 @@ DataHandler::DataHandler () :
 
 void DataHandler::setDataSource (DataSource *data_source)
 {
+  data_source_provided = true;
   this->data_source = data_source;
 }
 
@@ -58,6 +60,12 @@ void DataHandler::setDataFields (const std::vector<std::string> &data_fields)
                   << "defined number of items" << std::endl;
     }
   }
+
+  if (not data_source_provided) {
+    std::cout << "ERROR: trying to set data fields before providing a data source "
+              << "is not suported" << std::endl;
+  }
+  data_source->setFieldsPerLine(field_counter);
 }
 
 

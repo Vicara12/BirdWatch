@@ -1,5 +1,6 @@
 #include "windowhandler.h"
 #include <iostream>
+#include "textrender.h"
 
 
 WindowHandler::WindowHandler (std::string window_name)

@@ -76,7 +76,16 @@ bool Config::getField (const std::string &field_name, std::vector<std::string> &
 
 bool Config::getDataSourceField (const std::string &field_name, std::string &data)
 {
-  if (not config_json.contains(field_name))
+  if (not config_json["data_source"].contains(field_name))
+      return false;
+  data = config_json["data_source"][field_name];
+  return true;
+}
+
+
+bool Config::getDataSourceField (const std::string &field_name, int &data)
+{
+  if (not config_json["data_source"].contains(field_name))
       return false;
   data = config_json["data_source"][field_name];
   return true;

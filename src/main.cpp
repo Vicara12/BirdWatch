@@ -1,7 +1,7 @@
 #include "birdwatcher.h"
 
-int main ()
+int main (int argc, char **argv)
 {
-  BirdWatcher();
+  BirdWatcher(argc, argv);
   return 0;
 }
