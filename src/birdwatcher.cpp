@@ -59,38 +59,41 @@ bool BirdWatcher::init (std::string config_file_path)
   text_renderer->changeDefaultWindowSize(window_width, window_height);
   text_renderer->changeFontSize(window_width/3);
 
-  return addPFD() and initDataSource() and initWindowHandler();
+  return addPFD() and initDataSource() and initWindowHandler() and initScreenMessages();
 }
 
 
 void BirdWatcher::run ()
 {
-  TextRenderer *txt = TextRenderer::getInstance();
-  bool no_data_drawn = false;
-  bool no_more_data_drawn = false;
-  unsigned long no_data_txt_id = 0;
   while (window.windowOpen()) {
     data_handler.updateData();
-
-    if (not no_more_data_drawn and not data_handler.thereIsMoreData()) {
-      no_data_txt_id = txt->addText("END OF FILE", 0, 0.5, glm::vec2(0,-0.05),
-                                    glm::vec3(1,0,0), TXT_CENTER);
-      no_data_drawn = true;
-    }
-    // data connection has been lost, add NO DATA text
-    else if (not no_data_drawn and not data_handler.checkDataLink()) {
-      no_data_txt_id = txt->addText("NO DATA", 0, 0.5, glm::vec2(0,-0.05),
-                                    glm::vec3(1,0,0), TXT_CENTER);
-      no_data_drawn = true;
-    }
-    // if data connection reestablished, delete NO DATA text
-    else if (no_data_drawn and data_handler.checkDataLink()) {
-      txt->deleteText(no_data_txt_id);
-      no_data_drawn = false;
-    }
-
+    updateScreenMessages();
     window.update();
   }
+}
+
+
+bool BirdWatcher::initScreenMessages ()
+{
+  TextRenderer *txt = TextRenderer::getInstance();
+  eof_txt_id = txt->addText("END OF FILE", 0, 0.5, glm::vec2(0,-0.05),
+                            glm::vec3(1,0,0), TXT_CENTER);
+  no_data_txt_id = txt->addText("NO DATA", 0, 0.5, glm::vec2(0,-0.05),
+                                glm::vec3(1,0,0), TXT_CENTER);
+  screen_messages.addMessage(eof_txt_id);
+  screen_messages.setMessageStatus(eof_txt_id, false);
+  screen_messages.addMessage(no_data_txt_id);
+  screen_messages.setMessageStatus(no_data_txt_id, false);
+  return true;
+}
+
+
+void BirdWatcher::updateScreenMessages ()
+{
+  bool reached_eof = not data_handler.thereIsMoreData();
+  screen_messages.setMessageStatus(eof_txt_id, reached_eof);
+  if (not reached_eof)
+    screen_messages.setMessageStatus(no_data_txt_id, not data_handler.checkDataLink());
 }
 
 

@@ -31,6 +31,7 @@ typedef struct {
   TextAlignment align_to;
   unsigned width;
   int id;
+  bool enabled;
 } TextElement;
 
 
@@ -50,6 +51,8 @@ class TextRenderer : public Drawable
     void deleteText (int id);
     void windowReescaled (int height, int width);
     void updateText (int id, const std::string &new_str);
+    void enableText (int id);
+    void disableText (int id);
 
   private:
 

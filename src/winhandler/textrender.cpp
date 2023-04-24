@@ -117,7 +117,8 @@ void TextRenderer::draw ()
     return;
   }
   for (TextElement text : texts)
-    drawTextElement(text);
+    if (text.enabled)
+      drawTextElement(text);
 }
 
 
@@ -133,6 +134,7 @@ unsigned long TextRenderer::addText (const std::string &text, float angle, float
   te.color = color;
   te.align_to = alignment;
   te.id = next_available_id;
+  te.enabled = true;
   // if not initiated this will be done in the init function
   if (initiated)
     te.width = getTextWidth(te);
@@ -260,6 +262,30 @@ void TextRenderer::changeDefaultWindowSize (unsigned window_width, unsigned wind
 {
   this->window_width = window_width;
   this->window_height = window_height;
+}
+
+
+void TextRenderer::enableText (int id)
+{
+  std::vector<TextElement>::iterator it = texts.begin();
+  while (it != texts.end()) {
+    if (it->id == id) {
+      it->enabled = true;
+    }
+    it++;
+  }
+}
+
+
+void TextRenderer::disableText (int id)
+{
+  std::vector<TextElement>::iterator it = texts.begin();
+  while (it != texts.end()) {
+    if (it->id == id) {
+      it->enabled = false;
+    }
+    it++;
+  }
 }
 
 

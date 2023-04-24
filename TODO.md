@@ -4,7 +4,6 @@ This is a list of features and improvements that will be added at some point, in
 no particular order:
 
 * version 0
-  * JSON configuration
   * Class for displaying text as EOF and no data
   * Abstract instrument class: DataHandler will provide a dictionary with data fields
   * Comments in incomming data and headers (that is, lines that are not interpreted as data)
