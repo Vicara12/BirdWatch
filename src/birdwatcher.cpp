@@ -5,6 +5,8 @@
 
 
 BirdWatcher::BirdWatcher (int argc, char **argv) :
+  window_width(1800),
+  window_height(900),
   init_ok(false),
   window("Bird Watcher")
 {
@@ -40,11 +42,22 @@ BirdWatcher::~BirdWatcher ()
 
 bool BirdWatcher::init (std::string config_file_path)
 {
-  TextRenderer *text_renderer = TextRenderer::getInstance();
-  text_renderer->changeFontSize(200);
-
   if (not config.parseConfigFile(config_file_path))
     return false;
+
+  if (config.hasField("window_size")) {
+    int window_size;
+    config.getField("window_size", window_size);
+    if (window_size < 0) {
+      std::cout << "ERROR: config file field window_size must be positive" << std::endl;
+    }
+    window_width = 2*window_size;
+    window_height = window_size;
+  }
+
+  TextRenderer *text_renderer = TextRenderer::getInstance();
+  text_renderer->changeDefaultWindowSize(window_width, window_height);
+  text_renderer->changeFontSize(window_width/3);
 
   return addPFD() and initDataSource() and initWindowHandler();
 }
@@ -128,6 +141,10 @@ bool BirdWatcher::initDataSource ()
     return false;
   }
 
+  std::string separator = " ";
+  config.getField("data_separator", separator);
+  ds->setAsciiDataSeparator(separator[0]);
+
   data_handler.setDataSource(ds);
   std::vector<std::string> data_fields;
   if (not config.getField("data_fields", data_fields)) {
@@ -139,6 +156,10 @@ bool BirdWatcher::initDataSource ()
   bool print_data = false;
   config.getField("print_data", print_data);
   data_handler.printDataInTerminal(print_data);
+
+  int no_data_timeout = 250;
+  config.getField("no_data_timeout", no_data_timeout);
+  data_handler.setNoDataTimeout(no_data_timeout);
 
   return true;
 }
@@ -206,6 +227,8 @@ bool BirdWatcher::initWindowHandler ()
   for (Drawable *pannel : pannels)
     window.addDrawable(pannel);
   window.addDrawable(TextRenderer::getInstance());
-  window.initialSetup();
+  window.setRes(window_width, window_height);
+  if (not window.initialSetup())
+    return false;
   return true;
 }

@@ -36,6 +36,12 @@ bool Config::parseConfigFile (std::string path)
 }
 
 
+bool Config::hasField (const std::string &field_name)
+{
+  return config_json.contains(field_name);
+}
+
+
 bool Config::getField (const std::string &field_name, std::string &data)
 {
   if (not config_json.contains(field_name))

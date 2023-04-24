@@ -1,7 +1,6 @@
 {
-  "window_height": 1900,
-  "window_width": 900,
-  "data_format": "binary",
+  "window_size": 900,
+  "data_format": "ascii",
   "data_separator": " ",
   "data_fields": ["YPR"],
   "print_data": true,

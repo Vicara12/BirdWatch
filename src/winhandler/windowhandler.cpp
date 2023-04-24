@@ -29,7 +29,7 @@ void WindowHandler::setRes (int width, int height)
   this->height = height;
 }
 
-void WindowHandler::initialSetup ()
+bool WindowHandler::initialSetup ()
 {
   SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -45,8 +45,10 @@ void WindowHandler::initialSetup ()
                             SDL_WINDOW_OPENGL);
 
   gl_context = SDL_GL_CreateContext(window);
-  if (glewInit() != GLEW_OK)
+  if (glewInit() != GLEW_OK) {
     std::cout << "ERROR: could not initialize window\n";
+    return false;
+  }
   glClearColor(0.1f,0.1f,0.1f,1.f);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   window_open = true;
@@ -55,8 +57,11 @@ void WindowHandler::initialSetup ()
   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
   for (Drawable *drawable : window_objects)
-    if (not drawable->init())
+    if (not drawable->init()) {
       std::cout << "ERROR: could not init the panel " << drawable->name() << std::endl;
+      return false;
+    }
+  return true;
 }
 
 void WindowHandler::update ()

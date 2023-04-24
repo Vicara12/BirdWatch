@@ -21,7 +21,7 @@ class WindowHandler
 
     WindowHandler (std::string window_name);
     void play ();
-    void initialSetup ();
+    bool initialSetup ();
     void update ();
     void deleteDisplay ();
     bool windowOpen () const;

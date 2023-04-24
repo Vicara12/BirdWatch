@@ -23,6 +23,7 @@ private:
   bool initFileSource (DataSource **ds);
   bool initWindowHandler ();
 
+  int window_width, window_height;
   bool init_ok;
   Config config;
   std::vector<Drawable*> pannels;
