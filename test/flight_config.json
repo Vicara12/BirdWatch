@@ -1,0 +1,13 @@
+{
+  "window_size": 900,
+  "data_format": "ascii",
+  "data_separator": " ",
+  "data_fields": ["YPR"],
+  "print_data": true,
+  "no_data_timeout": 250,
+
+  "data_source" : {
+    "type": "file",
+    "file_path": "test/parsed_flight.txt"
+  }
+}
