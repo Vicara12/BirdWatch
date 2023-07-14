@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include "drawable.h"
+#include "viewporthandler.h"
 
 
 //  typical drawing loop is
@@ -26,6 +27,8 @@ class WindowHandler
     void deleteDisplay ();
     bool windowOpen () const;
     void addDrawable (Drawable *drawable);
+    void addDrawable (Drawable *drawable, glm::vec2 center,
+                      double size, double aspect_ratio);
     void setRes (int width, int height);
 
   private:
@@ -36,9 +39,11 @@ class WindowHandler
     std::string wname;
     bool window_open;
     int width, height;
-    std::vector<Drawable*> window_objects;
+    std::vector<std::pair<int, Drawable*>> window_objects; // viewport and drawable
     SDL_Window *window;
     SDL_GLContext gl_context;
+    SDL_Renderer *renderer;
+    ViewPortHandler vp_handler;
 };
 
 #endif

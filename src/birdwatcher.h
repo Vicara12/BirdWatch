@@ -8,6 +8,13 @@
 #include "winhandler/screenmessages.h"
 #include <vector>
 
+struct Pannel {
+  Drawable *drawable;
+  glm::vec2 center;
+  double size;
+  double aspect_ratio;
+};
+
 class BirdWatcher
 {
 public:
@@ -30,7 +37,7 @@ private:
   int eof_txt_id, no_data_txt_id;
   bool init_ok;
   Config config;
-  std::vector<Drawable*> pannels;
+  std::vector<struct Pannel> pannels;
   DataHandler data_handler;
   WindowHandler window;
   ScreenMessages screen_messages;

@@ -5,7 +5,7 @@
 PFD::PFD () :
   data_received(true)
 {
-  addPaneElement(PaneElement(&background, glm::vec3(2,2,1), glm::vec3(0)));
+  //addPaneElement(PaneElement(&background, glm::vec3(2,2,1), glm::vec3(0)));
   addPaneElement(PaneElement(&attitude_ind));
   addPaneElement(PaneElement(&yaw_ind, glm::vec3(1.5, 1.5, 1), glm::vec3(0, -0.85, 0)));
   background.setName("background");

@@ -33,8 +33,8 @@ BirdWatcher::~BirdWatcher ()
   if (not init_ok)
     return;
 
-  for (Drawable *pannel : pannels)
-    delete pannel;
+  for (Pannel pannel : pannels)
+    delete pannel.drawable;
   delete data_handler.getDataSource();
   window.deleteDisplay();
 }
@@ -51,7 +51,7 @@ bool BirdWatcher::init (std::string config_file_path)
     if (window_size < 0) {
       std::cout << "ERROR: config file field window_size must be positive" << std::endl;
     }
-    window_width = 2*window_size;
+    window_width = window_size;
     window_height = window_size;
   }
 
@@ -100,9 +100,12 @@ void BirdWatcher::updateScreenMessages ()
 bool BirdWatcher::addPFD ()
 {
   PFD *pfd = new PFD;
-  pfd->setTranslation(glm::vec3(0.5f, 0.f, 0.f));
-  pfd->setScale(glm::vec3(0.5, 1, 1));
-  pannels.push_back(pfd);
+  Pannel new_pannel;
+  new_pannel.drawable = pfd;
+  new_pannel.center = glm::vec2(0.5,0.5);
+  new_pannel.size = 1;
+  new_pannel.aspect_ratio = 1;
+  pannels.push_back(new_pannel);
   data_handler.setPFD(pfd);
   return true;
 }
@@ -227,9 +230,9 @@ bool BirdWatcher::initFileSource (DataSource **ds)
 
 bool BirdWatcher::initWindowHandler ()
 {
-  for (Drawable *pannel : pannels)
-    window.addDrawable(pannel);
-  window.addDrawable(TextRenderer::getInstance());
+  for (Pannel p : pannels)
+    window.addDrawable(p.drawable, p.center, p.size, p.aspect_ratio);
+  window.addDrawable(TextRenderer::getInstance(), glm::vec2(0.5,0.5), 1, 1);
   window.setRes(window_width, window_height);
   if (not window.initialSetup())
     return false;

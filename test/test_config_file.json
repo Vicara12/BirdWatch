@@ -3,7 +3,7 @@
   "data_format": "ascii",
   "data_separator": " ",
   "data_fields": ["YPR"],
-  "print_data": true,
+  "print_data": false,
   "no_data_timeout": 250,
 
   "data_source" : {

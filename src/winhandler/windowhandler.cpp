@@ -1,6 +1,4 @@
 #include "windowhandler.h"
-#include <iostream>
-#include "textrender.h"
 
 
 WindowHandler::WindowHandler (std::string window_name)
@@ -45,6 +43,8 @@ bool WindowHandler::initialSetup ()
                             SDL_WINDOW_OPENGL);
 
   gl_context = SDL_GL_CreateContext(window);
+  SDL_SetWindowResizable(window, SDL_TRUE);
+
   if (glewInit() != GLEW_OK) {
     std::cout << "ERROR: could not initialize window\n";
     return false;
@@ -56,9 +56,9 @@ bool WindowHandler::initialSetup ()
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-  for (Drawable *drawable : window_objects)
-    if (not drawable->init()) {
-      std::cout << "ERROR: could not init the panel " << drawable->name() << std::endl;
+  for (std::pair <int,Drawable*> drawable : window_objects)
+    if (not drawable.second->init()) {
+      std::cout << "ERROR: could not init the panel " << drawable.second->name() << std::endl;
       return false;
     }
   return true;
@@ -74,13 +74,30 @@ void WindowHandler::update ()
 void WindowHandler::drawItems ()
 {
   glClear(GL_COLOR_BUFFER_BIT);
-  for (Drawable *drawable : window_objects)
-    drawable->draw();
+  int w, h;
+  SDL_GetWindowSize(window, &w, &h);
+  if (vp_handler.getWidth() != w or vp_handler.getHeight() != h) {
+    width = w;
+    height = h;
+    vp_handler.windowResized(width, height);
+  }
+  for (std::pair <int,Drawable*> drawable : window_objects) {
+    vp_handler.focusViewPort(drawable.first);
+    drawable.second->draw();
+  }
 }
 
 void WindowHandler::addDrawable (Drawable *drawable)
 {
-  window_objects.push_back(drawable);
+  int vp_number = vp_handler.addFullScreenViewPort();
+  window_objects.push_back(std::make_pair(vp_number, drawable));
+}
+
+void WindowHandler::addDrawable (Drawable *drawable, glm::vec2 center,
+                                 double size, double aspect_ratio)
+{
+  int vp_number = vp_handler.addViewPort(center, size, aspect_ratio);
+  window_objects.push_back(std::make_pair(vp_number, drawable));
 }
 
 void WindowHandler::handleEvents ()
