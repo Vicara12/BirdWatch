@@ -28,11 +28,11 @@ bool FPV::init ()
   Drawable::generateSquare(VAO, EBO);
   if (not Drawable::loadProgram("./res/shaders/pfd", shader_program))
     return false;
-  if (not video.init("/home/anon/others/videos/yo.mp4"))
-    return false;
   unsigned char *data;
   int width, height;
-  if (not video.loadFrame(width, height, &data))
+  if (not video.init("/home/anon/others/videos/yo.mp4", width, height))
+    return false;
+  if (not video.loadFrame(&data))
     return false;
   glUseProgram(shader_program);
   loadTexture(width, height, data);

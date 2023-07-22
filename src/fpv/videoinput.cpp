@@ -9,11 +9,14 @@ VideoInput::~VideoInput ()
     avformat_close_input(&av_format_ctx);
     avformat_free_context(av_format_ctx);
     avcodec_free_context(&av_codec_ctx);
+    sws_freeContext(sws_scaler_ctx);
+    av_packet_free(&av_packet);
+    av_frame_free(&av_frame);
   }
 }
 
 
-bool VideoInput::init (std::string source)
+bool VideoInput::init (std::string source, int &width, int &height)
 {
   inited = false;
   av_format_ctx = avformat_alloc_context();
@@ -51,11 +54,30 @@ bool VideoInput::init (std::string source)
   if (avcodec_open2(av_codec_ctx, av_codec, NULL) < 0)
     return false;
 
+  av_frame = av_frame_alloc();
+  if (not av_frame)
+    return false;
+  av_packet = av_packet_alloc();
+  if (not av_packet)
+    return false;
+
+  if (not searchFrame())
+    return false;
+  first_frame = true;
+
+  width = this->width = av_frame->width;
+  height = this->height = av_frame->height;
+  sws_scaler_ctx = sws_getContext(width, height, av_codec_ctx->pix_fmt,
+                                  width, height, AV_PIX_FMT_RGB0,
+                                  SWS_BILINEAR, NULL, NULL, NULL);
+  if (not sws_scaler_ctx)
+    return false;
+
   return inited = true;
 }
 
 
-bool VideoInput::loadFrame (int &width, int &height, unsigned char **data)
+bool VideoInput::loadFrame (unsigned char **data)
 {
   if (not inited) {
     std::cout << "ERROR: tried to render a non-initialized "
@@ -63,13 +85,26 @@ bool VideoInput::loadFrame (int &width, int &height, unsigned char **data)
     return false;
   }
 
-  AVFrame *av_frame = av_frame_alloc();
-  if (not av_frame)
-    return false;
-  AVPacket *av_packet = av_packet_alloc();
-  if (not av_packet)
-    return false;
+  // the first frame is loaded at init to check video resolution, so there is
+  // no need to load it again
+  if (not first_frame) {
+    if (not searchFrame())
+      return false;
+  } else
+    first_frame = false;
 
+  *data = new unsigned char[width * height * 4];
+  unsigned char *dest[4] = {*data, NULL, NULL, NULL};
+  int dest_linesize[4] = {width*4, 0, 0, 0};
+  sws_scale(sws_scaler_ctx, av_frame->data, av_frame->linesize, 0, height, dest, dest_linesize);
+
+  return true;
+}
+
+
+
+bool VideoInput::searchFrame ()
+{
   while (av_read_frame(av_format_ctx, av_packet) >= 0) {
     if (av_packet->stream_index != video_stream_index)
       continue;
@@ -90,20 +125,5 @@ bool VideoInput::loadFrame (int &width, int &height, unsigned char **data)
     break;
   }
 
-  width = av_frame->width;
-  height = av_frame->height;
-  *data = new unsigned char[width * height * 4];
-  SwsContext *sws_scaler_ctx = sws_getContext(width, height, av_codec_ctx->pix_fmt,
-                                             width, height, AV_PIX_FMT_RGB0,
-                                             SWS_BILINEAR, NULL, NULL, NULL);
-  if (not sws_scaler_ctx)
-    return false;
-  unsigned char *dest[4] = {*data, NULL, NULL, NULL};
-  int dest_linesize[4] = {width*4, 0, 0, 0};
-  sws_scale(sws_scaler_ctx, av_frame->data, av_frame->linesize, 0, height, dest, dest_linesize);
-  sws_freeContext(sws_scaler_ctx);
-
-  av_packet_free(&av_packet);
-  av_frame_free(&av_frame);
   return true;
 }
