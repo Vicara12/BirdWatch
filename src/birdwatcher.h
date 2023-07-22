@@ -26,6 +26,7 @@ private:
   void run ();
 
   bool addPFD ();
+  bool addFPV ();
   bool initDataSource ();
   bool initSerialSource (DataSource **ds);
   bool initFileSource (DataSource **ds);

@@ -2,6 +2,7 @@
 #define FPV_H_
 
 #include "winhandler/drawable.h"
+#include "videoinput.h"
 
 class FPV : public Drawable
 {
@@ -15,10 +16,14 @@ class FPV : public Drawable
 
   private:
 
-  void setScale (glm::vec3);
-  void setTranslation (glm::vec3);
+    void loadTexture (int width, int height, unsigned char *data);
+    void setScale (glm::vec3);
+    void setTranslation (glm::vec3);
 
-  std::string video_source;
+    std::string video_source;
+    unsigned texture;
+    VideoInput video;
+    int TGLoc;
 };
 
 #endif

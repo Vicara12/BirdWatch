@@ -1,6 +1,6 @@
 #include "videoinput.h"
 
-VideoInput::VideoInput () {};
+VideoInput::VideoInput () : inited(false) {};
 
 
 VideoInput::~VideoInput ()
@@ -19,8 +19,10 @@ bool VideoInput::init (std::string source)
   av_format_ctx = avformat_alloc_context();
   if (not av_format_ctx)
     return false;
-  if (avformat_open_input(&av_format_ctx, source.c_str(), NULL, NULL))
+  if (avformat_open_input(&av_format_ctx, source.c_str(), NULL, NULL)) {
+    std::cout << "ERROR: could not open video source \"" << source << "\"" << std::endl;
     return false;
+  }
 
   video_stream_index = -1;
   AVCodecParameters *av_codec_params;
@@ -73,16 +75,14 @@ bool VideoInput::loadFrame (int &width, int &height, unsigned char **data)
       continue;
     int response = avcodec_send_packet(av_codec_ctx, av_packet);
     if (response < 0) {
-      std::cout << "ERROR: could not decode video packet: "
-                << av_err2str(response) << std::endl;
+      //printf("ERROR: could not decode video packet: %s\n", av_err2str(response));
       return false;
     }
     response = avcodec_receive_frame(av_codec_ctx, av_frame);
     if (response == AVERROR(EAGAIN) || response == AVERROR_EOF)
       continue;
     else if (response < 0) {
-      std::cout << "ERROR: could not decode video packet: "
-                << av_err2str(response) << std::endl;
+      //printf("ERROR: could not decode video packet: %s\n", av_err2str(response));
       return false;
     }
 
@@ -92,14 +92,16 @@ bool VideoInput::loadFrame (int &width, int &height, unsigned char **data)
 
   width = av_frame->width;
   height = av_frame->height;
-  *data = new unsigned char[width * height * 3];
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
-      (*data)[y*width*3 + x*3    ] = av_frame->data[0][y * av_frame->linesize[0] + x];
-      (*data)[y*width*3 + x*3 + 1] = av_frame->data[0][y * av_frame->linesize[0] + x];
-      (*data)[y*width*3 + x*3 + 2] = av_frame->data[0][y * av_frame->linesize[0] + x];
-    }
-  }
+  *data = new unsigned char[width * height * 4];
+  SwsContext *sws_scaler_ctx = sws_getContext(width, height, av_codec_ctx->pix_fmt,
+                                             width, height, AV_PIX_FMT_RGB0,
+                                             SWS_BILINEAR, NULL, NULL, NULL);
+  if (not sws_scaler_ctx)
+    return false;
+  unsigned char *dest[4] = {*data, NULL, NULL, NULL};
+  int dest_linesize[4] = {width*4, 0, 0, 0};
+  sws_scale(sws_scaler_ctx, av_frame->data, av_frame->linesize, 0, height, dest, dest_linesize);
+  sws_freeContext(sws_scaler_ctx);
 
   av_packet_free(&av_packet);
   av_frame_free(&av_frame);

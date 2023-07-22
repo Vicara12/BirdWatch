@@ -2,6 +2,7 @@
 #include "datahandler/serialsource.h"
 #include "datahandler/filesource.h"
 #include "winhandler/textrender.h"
+#include "fpv/fpv.h"
 
 
 BirdWatcher::BirdWatcher (int argc, char **argv) :
@@ -59,7 +60,8 @@ bool BirdWatcher::init (std::string config_file_path)
   text_renderer->changeDefaultWindowSize(window_width, window_height);
   text_renderer->changeFontSize(window_width/3);
 
-  return addPFD() and initDataSource() and initWindowHandler() and initScreenMessages();
+  return addFPV() and addPFD() and initDataSource() and initWindowHandler() and initScreenMessages();
+  return addFPV() and initDataSource() and initWindowHandler() and initScreenMessages();
 }
 
 
@@ -102,11 +104,24 @@ bool BirdWatcher::addPFD ()
   PFD *pfd = new PFD;
   Pannel new_pannel;
   new_pannel.drawable = pfd;
-  new_pannel.center = glm::vec2(0.5,0.5);
-  new_pannel.size = 1;
+  new_pannel.center = glm::vec2(0.75,0.5);
+  new_pannel.size = 0.5;
   new_pannel.aspect_ratio = 1;
   pannels.push_back(new_pannel);
   data_handler.setPFD(pfd);
+  return true;
+}
+
+
+bool BirdWatcher::addFPV ()
+{
+  Drawable *fpv = new FPV;
+  Pannel new_pannel;
+  new_pannel.drawable = fpv;
+  new_pannel.center = glm::vec2(0.5, 0.5);
+  new_pannel.size = 1;
+  new_pannel.aspect_ratio = 1;
+  pannels.push_back(new_pannel);
   return true;
 }
 
