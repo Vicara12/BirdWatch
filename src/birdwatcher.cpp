@@ -61,7 +61,6 @@ bool BirdWatcher::init (std::string config_file_path)
   text_renderer->changeFontSize(window_width/3);
 
   return addFPV() and addPFD() and initDataSource() and initWindowHandler() and initScreenMessages();
-  return addFPV() and initDataSource() and initWindowHandler() and initScreenMessages();
 }
 
 
@@ -115,7 +114,8 @@ bool BirdWatcher::addPFD ()
 
 bool BirdWatcher::addFPV ()
 {
-  Drawable *fpv = new FPV;
+  FPV *fpv = new FPV;
+  fpv->setVideoSource("/dev/video2");
   Pannel new_pannel;
   new_pannel.drawable = fpv;
   new_pannel.center = glm::vec2(0.5, 0.5);

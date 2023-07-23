@@ -6,6 +6,7 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
+#include <libavdevice/avdevice.h>
 #include <inttypes.h>
 }
 
@@ -16,11 +17,13 @@ class VideoInput
     ~VideoInput ();
 
     bool init (std::string source, int &width, int &height);
-    bool loadFrame (unsigned char **data);
+    // gives a pointer to the frame data if success or NULL otherwise
+    unsigned char * loadFrame ();
 
   private:
 
     bool searchFrame ();
+    AVPixelFormat convertPixelFormat (AVPixelFormat px);
 
     bool inited;
     bool first_frame;
@@ -31,6 +34,7 @@ class VideoInput
     AVPacket *av_packet;
     SwsContext *sws_scaler_ctx;
     int video_stream_index;
+    unsigned char *data;
 };
 
 #endif

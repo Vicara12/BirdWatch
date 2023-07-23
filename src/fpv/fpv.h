@@ -3,6 +3,9 @@
 
 #include "winhandler/drawable.h"
 #include "videoinput.h"
+#include <vector>
+
+typedef std::pair<std::string,std::vector<std::string>> Source;
 
 class FPV : public Drawable
 {
@@ -16,7 +19,10 @@ class FPV : public Drawable
 
   private:
 
-    void loadTexture (int width, int height, unsigned char *data);
+    void cannotOpenVideoSource ();
+    std::vector<Source> listCameras ();
+    void genTexture ();
+    void loadTexture (unsigned char *data);
     void setScale (glm::vec3);
     void setTranslation (glm::vec3);
 
@@ -24,6 +30,7 @@ class FPV : public Drawable
     unsigned texture;
     VideoInput video;
     int TGLoc;
+    int width, height;
 };
 
 #endif

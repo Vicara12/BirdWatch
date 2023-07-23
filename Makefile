@@ -1,6 +1,6 @@
 
 OPTIONS := -std=c++17 -O2 -Wall -Wno-sign-compare -Wno-unused-parameter
-LIBS 		:= -lGL -lSDL2 -lGLEW -lfreetype -lavutil -lavcodec -lavformat -lswscale
+LIBS 		:= -lGL -lSDL2 -lGLEW -lfreetype -lavutil -lavcodec -lavformat -lswscale -lavdevice
 EXE_NAME = BirdWatch
 
 BIN_PATH     = bin/

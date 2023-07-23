@@ -12,6 +12,7 @@ VideoInput::~VideoInput ()
     sws_freeContext(sws_scaler_ctx);
     av_packet_free(&av_packet);
     av_frame_free(&av_frame);
+    delete data;
   }
 }
 
@@ -19,6 +20,7 @@ VideoInput::~VideoInput ()
 bool VideoInput::init (std::string source, int &width, int &height)
 {
   inited = false;
+  avdevice_register_all(); // this command enables live video input (like webcam)
   av_format_ctx = avformat_alloc_context();
   if (not av_format_ctx)
     return false;
@@ -67,7 +69,9 @@ bool VideoInput::init (std::string source, int &width, int &height)
 
   width = this->width = av_frame->width;
   height = this->height = av_frame->height;
-  sws_scaler_ctx = sws_getContext(width, height, av_codec_ctx->pix_fmt,
+  data = new unsigned char[width * height * 4];
+  // convertPixelFormat is a workaround to some YUVJ pixel formats being deprecated
+  sws_scaler_ctx = sws_getContext(width, height, convertPixelFormat(av_codec_ctx->pix_fmt),
                                   width, height, AV_PIX_FMT_RGB0,
                                   SWS_BILINEAR, NULL, NULL, NULL);
   if (not sws_scaler_ctx)
@@ -77,28 +81,27 @@ bool VideoInput::init (std::string source, int &width, int &height)
 }
 
 
-bool VideoInput::loadFrame (unsigned char **data)
+unsigned char* VideoInput::loadFrame ()
 {
   if (not inited) {
     std::cout << "ERROR: tried to render a non-initialized "
               << "video input" << std::endl;
-    return false;
+    return NULL;
   }
 
   // the first frame is loaded at init to check video resolution, so there is
   // no need to load it again
   if (not first_frame) {
     if (not searchFrame())
-      return false;
+      return NULL;
   } else
     first_frame = false;
 
-  *data = new unsigned char[width * height * 4];
-  unsigned char *dest[4] = {*data, NULL, NULL, NULL};
+  unsigned char *dest[4] = {data, NULL, NULL, NULL};
   int dest_linesize[4] = {width*4, 0, 0, 0};
   sws_scale(sws_scaler_ctx, av_frame->data, av_frame->linesize, 0, height, dest, dest_linesize);
 
-  return true;
+  return data;
 }
 
 
@@ -126,4 +129,21 @@ bool VideoInput::searchFrame ()
   }
 
   return true;
+}
+
+
+AVPixelFormat VideoInput::convertPixelFormat (AVPixelFormat px)
+{
+  switch (px) {
+    case AV_PIX_FMT_YUVJ420P :
+      return AV_PIX_FMT_YUV420P;
+    case AV_PIX_FMT_YUVJ422P  :
+      return AV_PIX_FMT_YUV422P;
+    case AV_PIX_FMT_YUVJ444P   :
+      return AV_PIX_FMT_YUV444P;
+    case AV_PIX_FMT_YUVJ440P :
+      return AV_PIX_FMT_YUV440P;
+    default:
+      return px;
+  }
 }
