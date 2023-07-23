@@ -7,7 +7,6 @@
 
 struct ViewPort {
   glm::vec2 center;
-  bool full_screen;
   double size;
   double aspect_ratio;
   SDL_Rect dimensions;
@@ -20,7 +19,6 @@ public:
   ViewPortHandler ();
 
   int addViewPort (glm::vec2 center, double size, double aspect_ratio);
-  int addFullScreenViewPort ();
   void windowResized (int width, int height);
   void focusViewPort (int view_port);
   int getWidth ();
@@ -32,6 +30,7 @@ private:
 
   std::vector <struct ViewPort> view_ports;
   int width = 0, height = 0;
+  double vp_extremes[4] = {0, 0, 0, 0}; // min x, min y, max x, max y
 };
 
 #endif

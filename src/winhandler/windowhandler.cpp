@@ -87,12 +87,6 @@ void WindowHandler::drawItems ()
   }
 }
 
-void WindowHandler::addDrawable (Drawable *drawable)
-{
-  int vp_number = vp_handler.addFullScreenViewPort();
-  window_objects.push_back(std::make_pair(vp_number, drawable));
-}
-
 void WindowHandler::addDrawable (Drawable *drawable, glm::vec2 center,
                                  double size, double aspect_ratio)
 {

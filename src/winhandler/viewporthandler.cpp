@@ -31,19 +31,9 @@ void ViewPortHandler::calculateViewPortDimensions (struct ViewPort &vp)
 }
 
 
-int ViewPortHandler::addFullScreenViewPort ()
-{
-  struct ViewPort new_vp;
-  new_vp.full_screen = true;
-  view_ports.push_back(new_vp);
-  return view_ports.size()-1;
-}
-
-
 int ViewPortHandler::addViewPort (glm::vec2 center, double size, double aspect_ratio)
 {
   struct ViewPort new_vp;
-  new_vp.full_screen = false;
   new_vp.center = center;
   new_vp.size = size;
   new_vp.aspect_ratio = aspect_ratio;
@@ -58,16 +48,12 @@ void ViewPortHandler::windowResized (int width, int height)
   this->width = width;
   this->height = height;
   for (auto vp = view_ports.begin(); vp != view_ports.end(); vp++)
-    if (not vp->full_screen)
-      calculateViewPortDimensions(*vp);
+    calculateViewPortDimensions(*vp);
 }
 
 
 void ViewPortHandler::focusViewPort (int view_port)
 {
   struct ViewPort &vp = view_ports[view_port];
-  if (view_ports[view_port].full_screen)
-    glViewport(0, 0, width, height);
-  else
-    glViewport(vp.dimensions.x, vp.dimensions.y, vp.dimensions.w, vp.dimensions.h);
+  glViewport(vp.dimensions.x, vp.dimensions.y, vp.dimensions.w, vp.dimensions.h);
 }

@@ -26,7 +26,6 @@ class WindowHandler
     void update ();
     void deleteDisplay ();
     bool windowOpen () const;
-    void addDrawable (Drawable *drawable);
     void addDrawable (Drawable *drawable, glm::vec2 center,
                       double size, double aspect_ratio);
     void setRes (int width, int height);
