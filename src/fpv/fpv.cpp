@@ -42,7 +42,7 @@ bool FPV::init ()
   // changing the viewport
   glm::mat4 I(1.f);
   // the -1 on the y axis is because video is flipped on the y axis for some reason
-  glm::mat4 scaled = glm::scale(I, glm::vec3(1,-float(height)/width,1));
+  glm::mat4 scaled = glm::scale(I, glm::vec3(2,-2*float(height)/width,1));
   glUniformMatrix4fv(TGLoc, 1, GL_FALSE, &scaled[0][0]);
   glUniformMatrix4fv(preTGLoc, 1, GL_FALSE, &I[0][0]);
 
