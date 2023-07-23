@@ -27,6 +27,7 @@ public:
 private:
 
   void calculateViewPortDimensions (struct ViewPort &vp);
+  void checkVpExtremes (const struct ViewPort &new_vp);
 
   std::vector <struct ViewPort> view_ports;
   int width = 0, height = 0;
