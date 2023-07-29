@@ -45,6 +45,8 @@ void DataHandler::setDataFields (const std::vector<std::string> &data_fields)
 {
   int field_counter = 0;
   for (std::string field : data_fields) {
+    if (field == "video") // video input is not handled by this class
+      continue;
     std::map<std::string, int>::iterator key_pos = data_format.find(field);
     if (key_pos == data_format.end())
       std::cout << "WARNING: unkwnown data field \"" << field << "\"" << std::endl;
@@ -54,9 +56,6 @@ void DataHandler::setDataFields (const std::vector<std::string> &data_fields)
         field_counter += 3;
         if (not pfd_provided)
           std::cout << "WARNING: setting YPR attribute but PFD not provided yet" << std::endl;
-      }
-      else if (field == "video") { // video input is not handled by data handler
-        continue;
       }
       else
         std::cout << "ERROR: field \"" << field << "\" does not have a "

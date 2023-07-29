@@ -9,6 +9,7 @@ BirdWatcher::BirdWatcher (int argc, char **argv) :
   window_width(1800),
   window_height(900),
   init_ok(false),
+  data_handler_necessary(false),
   video_pannel_id(-1),
   pfd_pannel_id(-1),
   window("Bird Watcher")
@@ -213,6 +214,7 @@ bool BirdWatcher::initPannels ()
 
   for (const std::string &df : data_fields) {
     if (df == "YPR" and pfd_pannel_id == -1) {
+      data_handler_necessary = true;
       if (not addPFD())
         return false;
     }

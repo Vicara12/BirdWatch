@@ -35,6 +35,7 @@ private:
   int window_width, window_height;
   int eof_txt_id, no_data_txt_id;
   bool init_ok;
+  bool data_handler_necessary;
   int video_pannel_id;
   int pfd_pannel_id;
   FPV *fpv;
