@@ -30,6 +30,10 @@ class WindowHandler
                       double size, double aspect_ratio);
     void setRes (int width, int height);
 
+    bool setViewPortCenter (int vp_id, glm::vec2 center);
+    bool setViewPortSize   (int vp_id, double size);
+    bool setViewPortAR     (int vp_id, double ar);
+
   private:
 
     void drawItems ();

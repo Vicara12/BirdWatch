@@ -55,6 +55,9 @@ void DataHandler::setDataFields (const std::vector<std::string> &data_fields)
         if (not pfd_provided)
           std::cout << "WARNING: setting YPR attribute but PFD not provided yet" << std::endl;
       }
+      else if (field == "video") { // video input is not handled by data handler
+        continue;
+      }
       else
         std::cout << "ERROR: field \"" << field << "\" does not have a "
                   << "defined number of items" << std::endl;

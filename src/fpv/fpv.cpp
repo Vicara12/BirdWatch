@@ -2,7 +2,8 @@
 #include <filesystem>
 #include <fstream>
 
-FPV::FPV ()
+FPV::FPV () :
+  video_inited(false)
 {}
 
 void FPV::setScale (glm::vec3)
@@ -25,15 +26,22 @@ std::string FPV::name ()
   return "FPV stream";
 }
 
+bool FPV::preInitVideo ()
+{
+  if (not video.init(video_source, width, height)) {
+    cannotOpenVideoSource();
+    return false;
+  }
+  return video_inited = true;
+}
+
 bool FPV::init ()
 {
   Drawable::generateSquare(VAO, EBO);
   if (not Drawable::loadProgram("./res/shaders/pfd", shader_program))
     return false;
-  if (not video.init(video_source, width, height)) {
-    cannotOpenVideoSource();
+  if (not video_inited and not preInitVideo())
     return false;
-  }
   glUseProgram(shader_program);
   glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
   unsigned TGLoc = glGetUniformLocation(shader_program, "TG");
@@ -122,4 +130,10 @@ void FPV::cannotOpenVideoSource ()
       std::cout << " /dev/" << s.second[i];
     std::cout << std::endl;
   }
+}
+
+
+double FPV::getAR () const
+{
+  return double(width)/height;
 }

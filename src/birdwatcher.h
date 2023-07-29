@@ -6,14 +6,10 @@
 #include "datahandler/datahandler.h"
 #include "datahandler/config.h"
 #include "winhandler/screenmessages.h"
+#include "fpv/fpv.h"
+#include "pfd/pfd.h"
 #include <vector>
 
-struct Pannel {
-  Drawable *drawable;
-  glm::vec2 center;
-  double size;
-  double aspect_ratio;
-};
 
 class BirdWatcher
 {
@@ -32,13 +28,19 @@ private:
   bool initFileSource (DataSource **ds);
   bool initWindowHandler ();
   bool initScreenMessages ();
+  bool initPannels ();
   void updateScreenMessages ();
+  void composePannels ();
 
   int window_width, window_height;
   int eof_txt_id, no_data_txt_id;
   bool init_ok;
+  int video_pannel_id;
+  int pfd_pannel_id;
+  FPV *fpv;
+  PFD *pfd;
   Config config;
-  std::vector<struct Pannel> pannels;
+  std::vector<Drawable *> pannels;
   DataHandler data_handler;
   WindowHandler window;
   ScreenMessages screen_messages;

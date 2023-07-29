@@ -9,6 +9,8 @@ BirdWatcher::BirdWatcher (int argc, char **argv) :
   window_width(1800),
   window_height(900),
   init_ok(false),
+  video_pannel_id(-1),
+  pfd_pannel_id(-1),
   window("Bird Watcher")
 {
   std::string config_file_path;
@@ -34,10 +36,27 @@ BirdWatcher::~BirdWatcher ()
   if (not init_ok)
     return;
 
-  for (Pannel pannel : pannels)
-    delete pannel.drawable;
+  for (Drawable *pannel : pannels)
+    delete pannel;
   delete data_handler.getDataSource();
   window.deleteDisplay();
+}
+
+
+void BirdWatcher::composePannels ()
+{
+  // if there is video input it will occupy the center of the frame
+  if (video_pannel_id != -1) {
+    window.addDrawable(fpv, glm::vec2(0.5,0.5), 1, fpv->getAR());
+    if(pfd_pannel_id != -1) {
+      window.addDrawable(pfd, glm::vec2(1.25,0.5), 0.5, 1);
+      window.addDrawable(TextRenderer::getInstance(), glm::vec2(1.25,0.5), 0.5, 1);
+    }
+  // else other instruments should be at the center
+  } else {
+    window.addDrawable(pfd, glm::vec2(0.5,0.5), 1, 1);
+    window.addDrawable(TextRenderer::getInstance(), glm::vec2(0.5,0.5), 1, 1);
+  }
 }
 
 
@@ -60,7 +79,7 @@ bool BirdWatcher::init (std::string config_file_path)
   text_renderer->changeDefaultWindowSize(window_width, window_height);
   text_renderer->changeFontSize(window_width/3);
 
-  return addFPV() and addPFD() and initDataSource() and initWindowHandler() and initScreenMessages();
+  return initPannels() and initDataSource() and initWindowHandler() and initScreenMessages();
 }
 
 
@@ -100,28 +119,27 @@ void BirdWatcher::updateScreenMessages ()
 
 bool BirdWatcher::addPFD ()
 {
-  PFD *pfd = new PFD;
-  Pannel new_pannel;
-  new_pannel.drawable = pfd;
-  new_pannel.center = glm::vec2(0.75,0.5);
-  new_pannel.size = 0.5;
-  new_pannel.aspect_ratio = 1;
-  pannels.push_back(new_pannel);
+  pfd = new PFD;
+  pannels.push_back(pfd);
   data_handler.setPFD(pfd);
+  pfd_pannel_id = pannels.size()-1;
   return true;
 }
 
 
 bool BirdWatcher::addFPV ()
 {
-  FPV *fpv = new FPV;
-  fpv->setVideoSource("/dev/video2");
-  Pannel new_pannel;
-  new_pannel.drawable = fpv;
-  new_pannel.center = glm::vec2(0.5, 0.5);
-  new_pannel.size = 1;
-  new_pannel.aspect_ratio = 1;
-  pannels.push_back(new_pannel);
+  fpv = new FPV;
+  std::string video_source;
+  if (not config.getField("video_source", video_source)) {
+    std::cout << "ERROR: config file does not contain video_source field." << std::endl;
+    return false;
+  }
+  fpv->setVideoSource(video_source);
+  if (not fpv->preInitVideo())
+    return false;
+  pannels.push_back(fpv);
+  video_pannel_id = pannels.size()-1;
   return true;
 }
 
@@ -181,6 +199,31 @@ bool BirdWatcher::initDataSource ()
   int no_data_timeout = 250;
   config.getField("no_data_timeout", no_data_timeout);
   data_handler.setNoDataTimeout(no_data_timeout);
+
+  return true;
+}
+
+bool BirdWatcher::initPannels ()
+{
+  std::vector<std::string> data_fields;
+  if (not config.getField("data_fields", data_fields)) {
+    std::cout << "ERROR: config file does not contain \"data_fields\"" << std::endl;
+    return false;
+  }
+
+  for (const std::string &df : data_fields) {
+    if (df == "YPR" and pfd_pannel_id == -1) {
+      if (not addPFD())
+        return false;
+    }
+    else if (df == "video" and video_pannel_id == -1) {
+      if (not addFPV())
+        return false;
+    }
+    else {
+      std::cout << "WARNING: data_field \"" << df << "\" is unknown." << std::endl;
+    }
+  }
 
   return true;
 }
@@ -245,9 +288,7 @@ bool BirdWatcher::initFileSource (DataSource **ds)
 
 bool BirdWatcher::initWindowHandler ()
 {
-  for (Pannel p : pannels)
-    window.addDrawable(p.drawable, p.center, p.size, p.aspect_ratio);
-  window.addDrawable(TextRenderer::getInstance(), glm::vec2(0.5,0.5), 1, 1);
+  composePannels();
   window.setRes(window_width, window_height);
   if (not window.initialSetup())
     return false;

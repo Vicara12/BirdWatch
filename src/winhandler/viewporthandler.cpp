@@ -3,7 +3,8 @@
 #include <iostream>
 
 
-ViewPortHandler::ViewPortHandler ()
+ViewPortHandler::ViewPortHandler () :
+  extremes_valid(false)
 {
 }
 
@@ -58,16 +59,56 @@ int ViewPortHandler::addViewPort (glm::vec2 center, double size, double aspect_r
 }
 
 
+bool ViewPortHandler::changeCenter (int vp, glm::vec2 center)
+{
+  if (vp < 0 or vp >= int(view_ports.size()))
+    return false;
+  view_ports[vp].center = center;
+  extremes_valid = false;
+  for (auto view_port : view_ports)
+    checkVpExtremes(view_port);
+  calculateViewPortDimensions(view_ports[vp]);
+  return true;
+}
+
+
+bool ViewPortHandler::changeSize (int vp, double size)
+{
+  if (vp < 0 or vp >= int(view_ports.size()))
+    return false;
+  view_ports[vp].size = size;
+  extremes_valid = false;
+  for (auto view_port : view_ports)
+    checkVpExtremes(view_port);
+  calculateViewPortDimensions(view_ports[vp]);
+  return true;
+}
+
+
+bool ViewPortHandler::changeAR (int vp, double ar)
+{
+  if (vp < 0 or vp >= int(view_ports.size()))
+    return false;
+  view_ports[vp].aspect_ratio = ar;
+  extremes_valid = false;
+  for (auto view_port : view_ports)
+    checkVpExtremes(view_port);
+  calculateViewPortDimensions(view_ports[vp]);
+  return true;
+}
+
+
 void ViewPortHandler::checkVpExtremes (const struct ViewPort &new_vp)
 {
-  if (vp_extremes[0] > new_vp.center.x - new_vp.size/2)
+  if (not extremes_valid or vp_extremes[0] > new_vp.center.x - new_vp.size/2)
     vp_extremes[0] = new_vp.center.x - new_vp.size/2;
-  if (vp_extremes[1] > new_vp.center.y - new_vp.size/(2*new_vp.aspect_ratio))
+  if (not extremes_valid or vp_extremes[1] > new_vp.center.y - new_vp.size/(2*new_vp.aspect_ratio))
     vp_extremes[1] = new_vp.center.y - new_vp.size/(2*new_vp.aspect_ratio);
-  if (vp_extremes[2] < new_vp.center.x + new_vp.size/2)
+  if (not extremes_valid or vp_extremes[2] < new_vp.center.x + new_vp.size/2)
     vp_extremes[2] = new_vp.center.x + new_vp.size/2;
-  if (vp_extremes[3] < new_vp.center.y + new_vp.size/(2*new_vp.aspect_ratio))
+  if (not extremes_valid or vp_extremes[3] < new_vp.center.y + new_vp.size/(2*new_vp.aspect_ratio))
     vp_extremes[3] = new_vp.center.y + new_vp.size/(2*new_vp.aspect_ratio);
+  extremes_valid = true;
 }
 
 

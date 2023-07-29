@@ -115,3 +115,18 @@ void WindowHandler::deleteDisplay ()
   SDL_DestroyWindow(window);
   SDL_Quit();
 }
+
+bool WindowHandler::setViewPortCenter (int vp_id, glm::vec2 center)
+{
+  return vp_handler.changeCenter(vp_id, center);
+}
+
+bool WindowHandler::setViewPortSize (int vp_id, double size)
+{
+  return vp_handler.changeSize(vp_id, size);
+}
+
+bool WindowHandler::setViewPortAR (int vp_id, double ar)
+{
+  return vp_handler.changeAR(vp_id, ar);
+}

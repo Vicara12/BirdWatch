@@ -2,10 +2,10 @@
   "window_size": 900,
   "data_format": "ascii",
   "data_separator": " ",
-  "data_fields": ["YPR"],
+  "data_fields": ["YPR", "video"],
   "print_data": false,
   "no_data_timeout": 250,
-
+  "video_source": "/dev/video2",
   "data_source" : {
     "type": "file",
     "file_path": "test/out_ascii.txt"

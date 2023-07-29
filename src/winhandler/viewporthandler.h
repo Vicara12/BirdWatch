@@ -23,6 +23,9 @@ public:
   void focusViewPort (int view_port);
   int getWidth ();
   int getHeight ();
+  bool changeCenter (int vp, glm::vec2 center);
+  bool changeSize   (int vp, double size);
+  bool changeAR     (int vp, double ar);
 
 private:
 
@@ -32,6 +35,7 @@ private:
   std::vector <struct ViewPort> view_ports;
   int width = 0, height = 0;
   double vp_extremes[4] = {0, 0, 0, 0}; // min x, min y, max x, max y
+  bool extremes_valid;
 };
 
 #endif

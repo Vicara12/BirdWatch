@@ -14,8 +14,10 @@ class FPV : public Drawable
     FPV();
     void setVideoSource (std::string source);
     std::string name ();
+    bool preInitVideo ();
     bool init ();
     void draw ();
+    double getAR () const;
 
   private:
 
@@ -26,6 +28,7 @@ class FPV : public Drawable
     void setScale (glm::vec3);
     void setTranslation (glm::vec3);
 
+    bool video_inited;
     std::string video_source;
     unsigned texture;
     VideoInput video;
